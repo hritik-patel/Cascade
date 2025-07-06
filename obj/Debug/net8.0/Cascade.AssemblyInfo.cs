@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Cascade")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e35799ef59409c2b112919442a7fc4b06fcda4c8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac5b83f95d762f89196c0e555a8b78b2503f7d16")]
 [assembly: System.Reflection.AssemblyProductAttribute("Cascade")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Cascade")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

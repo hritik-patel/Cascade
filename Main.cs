@@ -75,7 +75,7 @@ public class Main : Game
         // Update all pixels
         foreach (var pixel in pixels)
         {
-            pixel.Update(dt, gameArea);
+            pixel.Update(dt, gameArea, pixels);
         }
 
         base.Update(gameTime);
