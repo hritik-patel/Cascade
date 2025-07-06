@@ -18,15 +18,10 @@ namespace Cascade
             Position = startPosition;
             Color = color;
             Velocity = Vector2.Zero;
-            IsActive = true;
         }
 
         public void Update(float deltaTime, Rectangle bounds)
         {   
-            // If the pixel is not active, do not update
-            if (!IsActive)
-                return;
-
             // Apply velocity
             Position += Velocity * deltaTime;
 
@@ -37,15 +32,11 @@ namespace Cascade
             {
                 Position.Y = floorY;
                 Velocity = Vector2.Zero;
-                IsActive = false;
             }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!IsActive)
-                return;
-
             spriteBatch.Draw(_texture, Position, Color);
         }
     }
