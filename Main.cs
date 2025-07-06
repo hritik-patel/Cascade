@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Cascade;
 
@@ -11,7 +12,8 @@ public class Main : Game
     private Rectangle gameArea;
     private Rectangle selectionPanel;
     private Rectangle debugPanel;
-    Texture2D whitePixel;
+    private List<Pixel> pixels = new List<Pixel>();
+    private Texture2D pixelTexture;
 
     public Main()
     {
@@ -47,16 +49,34 @@ public class Main : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        whitePixel = new Texture2D(GraphicsDevice, 1, 1);
-        whitePixel.SetData(new[] { Color.White });
+        pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+        pixelTexture.SetData(new[] {Color.White});
     }
 
     protected override void Update(GameTime gameTime)
     {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        {
             Exit();
+        }
 
         // TODO: Add your update logic here
+        var mouse = Mouse.GetState();
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (mouse.LeftButton == ButtonState.Pressed && gameArea.Contains(mouse.Position))
+        {
+        // Create a new falling pixel with initial downward velocity (98f is a gravity like value)
+        var newPixel = new Pixel(pixelTexture, mouse.Position.ToVector2(), Color.Yellow);
+        newPixel.Velocity = new Vector2(0, 98f);
+        pixels.Add(newPixel);
+        }
+
+        // Update all pixels
+        foreach (var pixel in pixels)
+        {
+            pixel.Update(dt, gameArea);
+        }
 
         base.Update(gameTime);
     }
@@ -69,9 +89,14 @@ public class Main : Game
         _spriteBatch.Begin();
 
         // Draw the main screen and side screens using colours to differentiate for now
-        _spriteBatch.Draw(whitePixel, gameArea, Color.DarkSlateBlue);
-        _spriteBatch.Draw(whitePixel, selectionPanel, Color.Gray);
-        _spriteBatch.Draw(whitePixel, debugPanel, Color.DarkRed);
+        _spriteBatch.Draw(pixelTexture, gameArea, Color.DarkSlateBlue);
+        _spriteBatch.Draw(pixelTexture, selectionPanel, Color.Gray);
+        _spriteBatch.Draw(pixelTexture, debugPanel, Color.DarkRed);
+
+        foreach (var pixel in pixels)
+        {
+            pixel.Draw(_spriteBatch);
+        }
 
         _spriteBatch.End();
 
