@@ -14,6 +14,10 @@ public class Main : Game
     private Rectangle debugPanel;
     private List<Pixel> pixels = new List<Pixel>();
     private Texture2D pixelTexture;
+    int cellSize = 4;
+    private int gridWidth = 255;
+    private int gridHeight = 200;
+    private Pixel?[,] grid;
 
     public Main()
     {
@@ -40,6 +44,7 @@ public class Main : Game
         gameArea = new Rectangle(0, 0, gameWidth, gameHeight);
         selectionPanel = new Rectangle(gameWidth, 0, panelWidth, panelHeight);
         debugPanel = new Rectangle(gameWidth, panelHeight, panelWidth, panelHeight);
+        grid = new Pixel?[gridWidth, gridHeight];
 
         base.Initialize();
     }
@@ -62,20 +67,31 @@ public class Main : Game
 
         // TODO: Add your update logic here
         var mouse = Mouse.GetState();
-        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Point mouseGridPos = new Point(mouse.X / cellSize, mouse.Y / cellSize);
 
         if (mouse.LeftButton == ButtonState.Pressed && gameArea.Contains(mouse.Position))
         {
-        // Create a new falling pixel with initial downward velocity (98f is a gravity like value)
-        var newPixel = new Pixel(pixelTexture, mouse.Position.ToVector2(), Color.Yellow);
-        newPixel.Velocity = new Vector2(0, 98f);
-        pixels.Add(newPixel);
+            var gridX = mouse.X / cellSize;
+            var gridY = mouse.Y / cellSize;
+
+            if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight && grid[gridX, gridY] == null)
+            {
+                grid[gridX, gridY] = new Pixel(Color.Yellow);
+            }
         }
 
         // Update all pixels
-        foreach (var pixel in pixels)
+        for (int y = gridHeight - 2; y >= 0; y--)
         {
-            pixel.Update(dt, gameArea, pixels);
+            for (int x = 0; x < gridWidth; x++)
+            {
+                if (grid[x, y] != null && grid[x, y + 1] == null)
+                {
+                    grid[x, y + 1] = grid[x, y];
+                    grid[x, y] = null;
+                    grid[x, y + 1]!.Position.Y += 1; // Move pixel's position
+                }
+            }
         }
 
         base.Update(gameTime);
@@ -93,9 +109,16 @@ public class Main : Game
         _spriteBatch.Draw(pixelTexture, selectionPanel, Color.Gray);
         _spriteBatch.Draw(pixelTexture, debugPanel, Color.DarkRed);
 
-        foreach (var pixel in pixels)
+        for (int x = 0; x < gridWidth; x++)
         {
-            pixel.Draw(_spriteBatch);
+            for (int y = 0; y < gridHeight; y++)
+            {
+                Pixel? pixel = grid[x, y];
+                if (pixel != null)
+                {
+                _spriteBatch.Draw(pixelTexture, new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize), pixel.Color);
+                }
+            }
         }
 
         _spriteBatch.End();
