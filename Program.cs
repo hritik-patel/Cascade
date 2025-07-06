@@ -1,2 +1,2 @@
-﻿using var game = new Cascade.Game1();
+﻿using var game = new Cascade.Main();
 game.Run();

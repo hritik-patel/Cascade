@@ -29,3 +29,4 @@
 /Users/hritikpatel/Cascade/Cascade/obj/Debug/net8.0/Cascade.pdb
 /Users/hritikpatel/Cascade/Cascade/obj/Debug/net8.0/Cascade.genruntimeconfig.cache
 /Users/hritikpatel/Cascade/Cascade/obj/Debug/net8.0/ref/Cascade.dll
+/Users/hritikpatel/Cascade/Cascade/obj/Debug/net8.0/Cascade.sourcelink.json
