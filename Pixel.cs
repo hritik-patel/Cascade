@@ -13,6 +13,7 @@ public class Pixel
     public PixelType Type;
     public bool IsActive;
     public float FallDelay = 0f;
+    public bool HasUpdated = false;
 
     // -1 = left, 1 = right, 0 = no direction yet
     public int LastDirection = 0;

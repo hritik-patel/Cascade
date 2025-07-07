@@ -104,19 +104,6 @@ public class Main : Game
             }
         }
 
-        // Update all pixels (drops almost everything down 1 cell)
-        for (int y = gridHeight - 2; y >= 0; y--)
-        {
-            for (int x = 0; x < gridWidth; x++)
-            {
-                if (grid[x, y] != null && grid[x, y + 1] == null)
-                {
-                    grid[x, y + 1] = grid[x, y];
-                    grid[x, y] = null;
-                    grid[x, y + 1]!.Position.Y += 1;
-                }
-            }
-        }
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         // Update the grid for specific pixel types
         UpdateGrid(deltaTime);
@@ -154,6 +141,16 @@ public class Main : Game
 
     private void UpdateGrid(float deltaTime)
     {
+        // Reset all HasUpdated flags
+        for (int y = 0; y < gridHeight; y++)
+        {
+            for (int x = 0; x < gridWidth; x++)
+            {
+                if (grid[x, y] != null)
+                    grid[x, y]!.HasUpdated = false;
+            }
+        }
+        
         // Loop bottom to top to prevent pixels from moving into themselves
         for (int y = gridHeight - 1; y >= 0; y--)
         {
@@ -221,6 +218,12 @@ public class Main : Game
                 // NOTE : Redo the diagonal movement to be more fluid, moving sideways and then down as 2 seperate movements
                 if (pixel.Type == PixelType.Water)
                 {
+                    // If the pixel has already been updated, skip it
+                    if (pixel.HasUpdated)
+                    {
+                        continue;
+                    }
+
                     // Check below and diagonals
                     int belowX = x;
                     int belowY = y + 1;
@@ -241,7 +244,7 @@ public class Main : Game
                         MovePixel(x, y, belowX, belowY);
                     }
                     // If both diagonal cells below are empty, move based on the last direction it moved
-                    else if (rightBelowEmpty && leftBelowEmpty)
+                    else if (rightBelowEmpty && leftBelowEmpty && leftEmpty && rightEmpty)
                     {
                         if (pixel.LastDirection == 1)
                             MovePixel(x, y, rightX, belowY);
@@ -264,17 +267,17 @@ public class Main : Game
                     }
 
                     // Only down-right free
-                    else if (rightBelowEmpty)
+                    else if (rightBelowEmpty && rightEmpty)
                     {
                         MovePixel(x, y, rightX, belowY);
                     }
                     // Only down-left free
-                    else if (leftBelowEmpty)
+                    else if (leftBelowEmpty && leftEmpty)
                     {
                         MovePixel(x, y, leftX, belowY);
                     }
                     // If both left and right sides are empty, keep moving sideways based on the last direction
-                    else if (leftEmpty && rightEmpty)
+                    else if (leftEmpty && rightEmpty && IsInBounds(leftX, y) && IsInBounds(rightX, y))
                     {
                         if (pixel.LastDirection == 1)
                             MovePixel(x, y, rightX, y);
@@ -305,10 +308,11 @@ public class Main : Game
                         }
                         else
                         {
+                            MovePixel(x, y, x, y);
                             pixel.LastDirection = 0;
                         }
                     }
-                    else if (!leftEmpty && rightEmpty && IsInBounds(leftX, y))
+                    else if (!leftEmpty && rightEmpty && IsInBounds(rightX, y))
                     {
                         if (grid[rightX, y] == null)
                         {
@@ -359,6 +363,7 @@ public class Main : Game
         grid[toX, toY] = pixel;
         grid[fromX, fromY] = null;
         pixel.Position = new Vector2(toX, toY);
+        pixel.HasUpdated = true;
     }
 
     // Check if the cell at (x, y) is water
