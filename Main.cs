@@ -150,7 +150,7 @@ public class Main : Game
                     grid[x, y]!.HasUpdated = false;
             }
         }
-        
+
         // Loop bottom to top to prevent pixels from moving into themselves
         for (int y = gridHeight - 1; y >= 0; y--)
         {
@@ -183,6 +183,8 @@ public class Main : Game
                     bool belowEmpty = IsCellEmpty(belowX, belowY);
                     bool leftBelowEmpty = IsCellEmpty(leftX, belowY);
                     bool rightBelowEmpty = IsCellEmpty(rightX, belowY);
+                    bool leftEmpty = IsCellEmpty(leftX, y);
+                    bool rightEmpty = IsCellEmpty(rightX, y);
 
                     if (belowEmpty)
                     {
@@ -195,24 +197,31 @@ public class Main : Game
                         pixel.FallDelay = 0.0625f;
                         pixel.ChangeColor(new Color(216, 160, 28, 200));
                     }
-                    else if (leftBelowEmpty && !rightBelowEmpty)
+                    else if (leftBelowEmpty && !rightBelowEmpty && leftEmpty)
                     {
-                        MovePixel(x, y, leftX, belowY);
+                        MovePixel(x, y, leftX, y);
+                        MovePixel(leftX, y, leftX, belowY);
                     }
-                    else if (!leftBelowEmpty && rightBelowEmpty)
+                    else if (!leftBelowEmpty && rightBelowEmpty && rightEmpty)
                     {
-                        MovePixel(x, y, rightX, belowY);
+                        MovePixel(x, y, rightX, y);
+                        MovePixel(rightX, y, rightX, belowY);
                     }
-                    else if (leftBelowEmpty && rightBelowEmpty)
+                    else if (leftBelowEmpty && rightBelowEmpty && leftEmpty && rightEmpty)
                     {
                         int randomInt = random.Next(0, 2);
                         if (randomInt == 0)
-                            MovePixel(x, y, leftX, belowY);
+                        {
+                            MovePixel(x, y, leftX, y);
+                            MovePixel(leftX, y, leftX, belowY);
+                        }
                         else
-                            MovePixel(x, y, rightX, belowY);
+                        {
+                            MovePixel(x, y, rightX, y);
+                            MovePixel(rightX, y, rightX, belowY);
+                        }
                     }
                 }
-
                 // If the pixel is a water pixel, check if it can fall or move sideways/diagonally
                 // Priority is given to falling down, then diagonally down, then sideways
                 // NOTE : Redo the diagonal movement to be more fluid, moving sideways and then down as 2 seperate movements
@@ -247,20 +256,28 @@ public class Main : Game
                     else if (rightBelowEmpty && leftBelowEmpty && leftEmpty && rightEmpty)
                     {
                         if (pixel.LastDirection == 1)
-                            MovePixel(x, y, rightX, belowY);
+                        {
+                            MovePixel(x, y, rightX, y);
+                            MovePixel(rightX, y, rightX, belowY);
+                        }
                         else if (pixel.LastDirection == -1)
-                            MovePixel(x, y, leftX, belowY);
+                        {
+                            MovePixel(x, y, leftX, y);
+                            MovePixel(leftX, y, leftX, belowY);
+                        }
                         else
                         {
                             // No direction set yet, choose randomly, and set LastDirection
                             if (random.Next(2) == 0)
                             {
-                                MovePixel(x, y, rightX, belowY);
+                                MovePixel(x, y, rightX, y);
+                                MovePixel(rightX, y, rightX, belowY);
                                 pixel.LastDirection = 1;
                             }
                             else
                             {
-                                MovePixel(x, y, leftX, belowY);
+                                MovePixel(x, y, leftX, y);
+                                MovePixel(leftX, y, leftX, belowY);
                                 pixel.LastDirection = -1;
                             }
                         }
@@ -269,12 +286,14 @@ public class Main : Game
                     // Only down-right free
                     else if (rightBelowEmpty && rightEmpty)
                     {
-                        MovePixel(x, y, rightX, belowY);
+                        MovePixel(x, y, rightX, y);
+                        MovePixel(rightX, y, rightX, belowY);
                     }
                     // Only down-left free
                     else if (leftBelowEmpty && leftEmpty)
                     {
-                        MovePixel(x, y, leftX, belowY);
+                        MovePixel(x, y, leftX, y);
+                        MovePixel(leftX, y, leftX, belowY);
                     }
                     // If both left and right sides are empty, keep moving sideways based on the last direction
                     else if (leftEmpty && rightEmpty && IsInBounds(leftX, y) && IsInBounds(rightX, y))
