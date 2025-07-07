@@ -12,7 +12,8 @@ public class Pixel
     public Color Color;
     public PixelType Type;
     public bool IsActive;
-    
+    public float FallDelay = 0f;
+
     // -1 = left, 1 = right, 0 = no direction yet
     public int LastDirection = 0;
 
@@ -21,5 +22,9 @@ public class Pixel
         Color = color;
         Type = type;
         IsActive = true;
+    }
+    public void ChangeColor(Color newColor)
+    {
+        Color = newColor;
     }
 }

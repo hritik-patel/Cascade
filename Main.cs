@@ -15,11 +15,12 @@ public class Main : Game
     private Rectangle debugPanel;
     private List<Pixel> pixels = new List<Pixel>();
     private Texture2D pixelTexture;
-    int cellSize = 4;
+    private int cellSize = 4;
     private int gridWidth = 255;
     private int gridHeight = 200;
     private Pixel?[,] grid;
     private Random random = new Random();
+    private float deltaTime;
 
 
     public Main()
@@ -41,9 +42,11 @@ public class Main : Game
         int gameWidth = 1020;
         int gameHeight = 800;
 
+        // Side panel sizes
         int panelWidth = 400;
         int panelHeight = 400;
 
+        // Create rectangles for game area and side panels
         gameArea = new Rectangle(0, 0, gameWidth, gameHeight);
         selectionPanel = new Rectangle(gameWidth, 0, panelWidth, panelHeight);
         debugPanel = new Rectangle(gameWidth, panelHeight, panelWidth, panelHeight);
@@ -57,22 +60,27 @@ public class Main : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
+        // Create a 1x1 white texture for drawing pixels
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
-        pixelTexture.SetData(new[] { Color.White });
+        pixelTexture.SetData(new[] {Color.White});
     }
 
     protected override void Update(GameTime gameTime)
-    {
+    {   
+        // The game quits when the backspace/delete button is pressed or escape key is pressed
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
             Exit();
         }
 
         // TODO: Add your update logic here
+        // Get the current mouse state and keyboard state for inputs (for now using both)
         var mouse = Mouse.GetState();
         var kstate = Keyboard.GetState();
+        // Calculate the mouse position in cell coordinates
         Point mouseGridPos = new Point(mouse.X / cellSize, mouse.Y / cellSize);
 
+        // If the left button is pressed and the mouse is within the game area, create a new sand pixel
         if (mouse.LeftButton == ButtonState.Pressed && gameArea.Contains(mouse.Position))
         {
             var gridX = mouse.X / cellSize;
@@ -84,6 +92,7 @@ public class Main : Game
             }
         }
 
+        // If the right button is pressed and the mouse is within the game area, create a new water pixel
         if (kstate.IsKeyDown(Keys.W) && gameArea.Contains(mouse.Position))
         {
             var gridX = mouse.X / cellSize;
@@ -95,7 +104,7 @@ public class Main : Game
             }
         }
 
-        // Update all pixels
+        // Update all pixels (drops almost everything down 1 cell)
         for (int y = gridHeight - 2; y >= 0; y--)
         {
             for (int x = 0; x < gridWidth; x++)
@@ -108,7 +117,9 @@ public class Main : Game
                 }
             }
         }
-        UpdateGrid();
+        deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        // Update the grid for specific pixel types
+        UpdateGrid(deltaTime);
         base.Update(gameTime);
     }
 
@@ -141,7 +152,7 @@ public class Main : Game
         base.Draw(gameTime);
     }
 
-    private void UpdateGrid()
+    private void UpdateGrid(float deltaTime)
     {
         // Loop bottom to top to prevent pixels from moving into themselves
         for (int y = gridHeight - 1; y >= 0; y--)
@@ -154,14 +165,24 @@ public class Main : Game
                     continue;
                 }
 
+                // If the pixel is a sand pixel, check if it can fall
+                // Sand falls down if the cell below is empty or contains water
+                // If it falls through water, it changes color and sets a fall delay to simulate a slower fall
                 if (pixel.Type == PixelType.Sand)
                 {
+                    pixel.FallDelay -= deltaTime;
+                    if (pixel.FallDelay > 0f)
+                    {
+                        // Skip this pixel if it hasn't reached its fall delay
+                        continue;
+                    }
                     int belowX = x;
                     int belowY = y + 1;
 
                     int leftX = x - 1;
                     int rightX = x + 1;
 
+                    // Checks if the cells are empty to allow movement
                     bool belowEmpty = IsCellEmpty(belowX, belowY);
                     bool leftBelowEmpty = IsCellEmpty(leftX, belowY);
                     bool rightBelowEmpty = IsCellEmpty(rightX, belowY);
@@ -173,6 +194,9 @@ public class Main : Game
                     else if (IsCellWater(belowX, belowY))
                     {
                         SwapPixel(x, y, belowX, belowY);
+                        // Set new fall delay after falling through water and change the colour to a darker shade
+                        pixel.FallDelay = 0.0625f;
+                        pixel.ChangeColor(new Color(216, 160, 28, 200));
                     }
                     else if (leftBelowEmpty && !rightBelowEmpty)
                     {
@@ -192,12 +216,11 @@ public class Main : Game
                     }
                 }
 
+                // If the pixel is a water pixel, check if it can fall or move sideways/diagonally
+                // Priority is given to falling down, then diagonally down, then sideways
+                // NOTE : Redo the diagonal movement to be more fluid, moving sideways and then down as 2 seperate movements
                 if (pixel.Type == PixelType.Water)
                 {
-                    // Water movement logic
-                    // Water can move down, down-left, or down-right
-                    // If it can't move down, it tries to move sideways
-
                     // Check below and diagonals
                     int belowX = x;
                     int belowY = y + 1;
@@ -212,11 +235,12 @@ public class Main : Game
                     bool leftEmpty = IsCellEmpty(leftX, y);
                     bool rightEmpty = IsCellEmpty(rightX, y);
 
+                    // Move straight down if possible
                     if (belowEmpty)
                     {
-                        // Move straight down
                         MovePixel(x, y, belowX, belowY);
                     }
+                    // If both diagonal cells below are empty, move based on the last direction it moved
                     else if (rightBelowEmpty && leftBelowEmpty)
                     {
                         if (pixel.LastDirection == 1)
@@ -225,7 +249,7 @@ public class Main : Game
                             MovePixel(x, y, leftX, belowY);
                         else
                         {
-                            // No direction set yet, choose randomly
+                            // No direction set yet, choose randomly, and set LastDirection
                             if (random.Next(2) == 0)
                             {
                                 MovePixel(x, y, rightX, belowY);
@@ -239,47 +263,81 @@ public class Main : Game
                         }
                     }
 
+                    // Only down-right free
                     else if (rightBelowEmpty)
                     {
-                        // Only down-right free
                         MovePixel(x, y, rightX, belowY);
                     }
+                    // Only down-left free
                     else if (leftBelowEmpty)
                     {
-                        // Only down-left free
                         MovePixel(x, y, leftX, belowY);
                     }
-                    else
+                    // If both left and right sides are empty, keep moving sideways based on the last direction
+                    else if (leftEmpty && rightEmpty)
                     {
-                        // Can't move down or diagonally down
-                        // Try to move sideways
-                        if (leftEmpty && rightEmpty)
+                        if (pixel.LastDirection == 1)
+                            MovePixel(x, y, rightX, y);
+                        else if (pixel.LastDirection == -1)
+                            MovePixel(x, y, leftX, y);
+                        else
                         {
-                            // Both sides free, pick randomly
+                            // No direction set yet, choose randomly, and set LastDirection
                             if (random.Next(2) == 0)
-                                MovePixel(x, y, leftX, y);
-                            else
+                            {
                                 MovePixel(x, y, rightX, y);
+                                pixel.LastDirection = 1;
+                            }
+                            else
+                            {
+                                MovePixel(x, y, leftX, y);
+                                pixel.LastDirection = -1;
+                            }
                         }
-                        else if (leftEmpty)
+                    }
+                    // If only one side is empty, move to that side, and set the last direction
+                    else if (leftEmpty && !rightEmpty && IsInBounds(leftX, y))
+                    {
+                        if (grid[leftX, y] == null)
                         {
                             MovePixel(x, y, leftX, y);
-                        }
-                        else if (rightEmpty)
-                        {
-                            MovePixel(x, y, rightX, y);
+                            pixel.LastDirection = -1;
                         }
                         else
                         {
-                            // No move possible
+                            pixel.LastDirection = 0;
                         }
                     }
+                    else if (!leftEmpty && rightEmpty && IsInBounds(leftX, y))
+                    {
+                        if (grid[rightX, y] == null)
+                        {
+                            MovePixel(x, y, rightX, y);
+                            pixel.LastDirection = 1; // Set last direction to right
+                        }
+                        else
+                        {
+                            pixel.LastDirection = 0;
+                        }
+                    }
+                    else
+                    {
+                        // No move possible, do nothing
+                        // Reset last direction if no move is made
+                        pixel.LastDirection = 0;
+                    }
                 }
-
             }
         }
     }
 
+    // Check if the coordinates (x, y) are within the grid bounds
+    private bool IsInBounds(int x, int y)
+    {
+        return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
+    }
+
+    // Check if the cell at (x, y) is empty
     private bool IsCellEmpty(int x, int y)
     {
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
@@ -289,6 +347,7 @@ public class Main : Game
         return grid[x, y] == null;
     }
 
+    // Move a pixel from one cell to another
     private void MovePixel(int fromX, int fromY, int toX, int toY)
     {
         var pixel = grid[fromX, fromY];
@@ -302,6 +361,7 @@ public class Main : Game
         pixel.Position = new Vector2(toX, toY);
     }
 
+    // Check if the cell at (x, y) is water
     private bool IsCellWater(int x, int y)
     {
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
@@ -311,6 +371,7 @@ public class Main : Game
         return grid[x, y]?.Type == PixelType.Water;
     }
 
+    // Swap two pixels in the grid
     private void SwapPixel(int fromX, int fromY, int toX, int toY)
     {
         var fromPixel = grid[fromX, fromY];
