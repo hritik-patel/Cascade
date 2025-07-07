@@ -20,7 +20,7 @@ public class Main : Game
     private int gridHeight = 200;
     private Pixel?[,] grid;
     private Random random = new Random();
-    
+
 
     public Main()
     {
@@ -170,6 +170,10 @@ public class Main : Game
                     {
                         MovePixel(x, y, belowX, belowY);
                     }
+                    else if (IsCellWater(belowX, belowY))
+                    {
+                        SwapPixel(x, y, belowX, belowY);
+                    }
                     else if (leftBelowEmpty && !rightBelowEmpty)
                     {
                         MovePixel(x, y, leftX, belowY);
@@ -296,6 +300,34 @@ public class Main : Game
         grid[toX, toY] = pixel;
         grid[fromX, fromY] = null;
         pixel.Position = new Vector2(toX, toY);
-    }   
+    }
+
+    private bool IsCellWater(int x, int y)
+    {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
+        {
+            return false;
+        }
+        return grid[x, y]?.Type == PixelType.Water;
+    }
+
+    private void SwapPixel(int fromX, int fromY, int toX, int toY)
+    {
+        var fromPixel = grid[fromX, fromY];
+        var toPixel = grid[toX, toY];
+
+        if (fromPixel == null || toPixel == null)
+        {
+            return;
+        }
+
+        // Swap the pixels
+        grid[fromX, fromY] = toPixel;
+        grid[toX, toY] = fromPixel;
+
+        // Update their positions
+        fromPixel.Position = new Vector2(toX, toY);
+        toPixel.Position = new Vector2(fromX, fromY);
+    }
 }
 
