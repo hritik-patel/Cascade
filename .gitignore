@@ -1,0 +1,41 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# Rider/JetBrains
+.idea/
+*.sln.iml
+
+# Log and cache files
+*.log
+
+# Backup files
+*.bak
+
+# MonoGame pipeline tool
+*.mgcb~
+*.spritefont
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Dotnet-specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore environment-specific configs
+*.db
+*.pdb
+*.cache
+*.config
