@@ -1,7 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
+
 public enum PixelType
 {
     Sand,
@@ -55,7 +56,13 @@ public class Pixel
         return Type;
     }
 
-    public virtual void PixelUpdate(Pixel?[,] grid, int x, int y, int gridWidth, int gridHeight, Random random, float deltaTime)
-    {
-    }
+    public virtual void PixelUpdate(
+        Pixel?[,] grid,
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Random random,
+        float deltaTime
+    ) { }
 }

@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-using System;
-
-namespace Cascade;
+﻿namespace Cascade;
 
 public class Main : Game
 {
@@ -21,7 +15,6 @@ public class Main : Game
     private Pixel?[,] grid;
     private Random random = new Random();
     private float deltaTime;
-
 
     public Main()
     {
@@ -62,13 +55,16 @@ public class Main : Game
         // TODO: use this.Content to load your game content here
         // Create a 1x1 white texture for drawing pixels
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
-        pixelTexture.SetData(new[] {Color.White});
+        pixelTexture.SetData(new[] { Color.White });
     }
 
     protected override void Update(GameTime gameTime)
-    {   
+    {
         // The game quits when the backspace/delete button is pressed or escape key is pressed
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        if (
+            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+            || Keyboard.GetState().IsKeyDown(Keys.Escape)
+        )
         {
             Exit();
         }
@@ -86,7 +82,13 @@ public class Main : Game
             var gridX = mouse.X / cellSize;
             var gridY = mouse.Y / cellSize;
 
-            if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight && grid[gridX, gridY] == null)
+            if (
+                gridX >= 0
+                && gridX < gridWidth
+                && gridY >= 0
+                && gridY < gridHeight
+                && grid[gridX, gridY] == null
+            )
             {
                 grid[gridX, gridY] = new Sand(PixelType.Sand, Color.Yellow);
             }
@@ -98,7 +100,13 @@ public class Main : Game
             var gridX = mouse.X / cellSize;
             var gridY = mouse.Y / cellSize;
 
-            if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight && grid[gridX, gridY] == null)
+            if (
+                gridX >= 0
+                && gridX < gridWidth
+                && gridY >= 0
+                && gridY < gridHeight
+                && grid[gridX, gridY] == null
+            )
             {
                 grid[gridX, gridY] = new Water();
             }
@@ -129,7 +137,11 @@ public class Main : Game
                 Pixel? pixel = grid[x, y];
                 if (pixel != null)
                 {
-                    _spriteBatch.Draw(pixelTexture, new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize), pixel.Color);
+                    _spriteBatch.Draw(
+                        pixelTexture,
+                        new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize),
+                        pixel.Color
+                    );
                 }
             }
         }
@@ -166,4 +178,3 @@ public class Main : Game
         }
     }
 }
-

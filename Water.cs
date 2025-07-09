@@ -1,19 +1,23 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 public class Water : Pixel
 {
     private int maxMovement = 50;
     private int movementCounter = 0;
-    public Water() : base(PixelType.Water, Color.Blue)
-    {
-    }
+
+    public Water()
+        : base(PixelType.Water, Color.Blue) { }
 
     // If the pixel is a water pixel, check if it can fall or move sideways/diagonally
     // Priority is given to falling down, then diagonally down, then sideways
     // NOTE : Redo the diagonal movement to be more fluid, moving sideways and then down as 2 seperate movements
-    public override void PixelUpdate(Pixel?[,] grid, int x, int y, int gridWidth, int gridHeight, Random random, float deltaTime)
+    public override void PixelUpdate(
+        Pixel?[,] grid,
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Random random,
+        float deltaTime
+    )
     {
         // If the pixel has already been updated, skip it
         if (this.HasUpdated)
@@ -105,7 +109,12 @@ public class Water : Pixel
             movementCounter = 0;
         }
         // If both left and right sides are empty, keep moving sideways based on the last direction
-        else if (leftEmpty && rightEmpty && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth) && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth))
+        else if (
+            leftEmpty
+            && rightEmpty
+            && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth)
+            && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth)
+        )
         {
             if (this.LastDirection == 1)
             {
@@ -118,7 +127,6 @@ public class Water : Pixel
                 GridMethods.MovePixel(x, y, leftX, y, grid);
                 movementCounter++;
             }
-
             else
             {
                 // No direction set yet, choose randomly, and set LastDirection
@@ -137,7 +145,11 @@ public class Water : Pixel
             }
         }
         // If only one side is empty, move to that side, and set the last direction
-        else if (leftEmpty && !rightEmpty && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth))
+        else if (
+            leftEmpty
+            && !rightEmpty
+            && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth)
+        )
         {
             if (grid[leftX, y] == null)
             {
@@ -152,7 +164,11 @@ public class Water : Pixel
                 this.LastDirection = 0;
             }
         }
-        else if (!leftEmpty && rightEmpty && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth))
+        else if (
+            !leftEmpty
+            && rightEmpty
+            && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth)
+        )
         {
             if (grid[rightX, y] == null)
             {

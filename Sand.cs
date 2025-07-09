@@ -1,13 +1,9 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 public class Sand : Pixel
 {
     public bool soaked = false;
-    public Sand(PixelType type, Color color) : base(type, color)
-    {
-    }
+
+    public Sand(PixelType type, Color color)
+        : base(type, color) { }
 
     private bool checkSoaked()
     {
@@ -22,7 +18,15 @@ public class Sand : Pixel
     // If the pixel is a sand pixel, check if it can fall
     // Sand falls down if the cell below is empty or contains water
     // If it falls through water, it changes color and sets a fall delay to simulate a slower fall
-    public override void PixelUpdate(Pixel?[,] grid, int x, int y, int gridWidth, int gridHeight, Random random, float deltaTime)
+    public override void PixelUpdate(
+        Pixel?[,] grid,
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Random random,
+        float deltaTime
+    )
     {
         this.FallDelay -= deltaTime;
         if (this.FallDelay > 0f)

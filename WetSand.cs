@@ -1,15 +1,18 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System;
 public class WetSand : Sand
 {
-    public WetSand() : base(PixelType.WetSand, new Color(216, 160, 28, 200))
-    {
-    }
+    public WetSand()
+        : base(PixelType.WetSand, new Color(216, 160, 28, 200)) { }
 
     // Wet sand behaves like sand, but takes longer to fall and form the pyramid sand shape
-    public override void PixelUpdate(Pixel?[,] grid, int x, int y, int gridWidth, int gridHeight, Random random, float deltaTime)
+    public override void PixelUpdate(
+        Pixel?[,] grid,
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Random random,
+        float deltaTime
+    )
     {
         this.FallDelay -= deltaTime;
         if (this.FallDelay > 0f)
