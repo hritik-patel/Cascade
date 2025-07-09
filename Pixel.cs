@@ -47,6 +47,11 @@ public class Pixel
         }
     }
 
+    public PixelType GetType()
+    {
+        return Type;
+    }
+
     public virtual void PixelUpdate(Pixel?[,] grid, int x, int y, int gridWidth, int gridHeight, Random random, float deltaTime)
     {
     }

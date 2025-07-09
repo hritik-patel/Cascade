@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System;
 public class Water : Pixel
 {
+    private int maxMovement = 50;
+    private int movementCounter = 0;
     public Water() : base(PixelType.Water, Color.Blue)
     {
     }
@@ -18,6 +20,16 @@ public class Water : Pixel
         {
             return;
         }
+
+        this.FallDelay -= deltaTime;
+        if (this.FallDelay > 0f)
+        {
+            // Skip this pixel if it hasn't reached its fall delay
+            return;
+        }
+
+        // Add a slight fall delay based on the movement counter, to simulate the water slowing down as it moves right/left
+        this.FallDelay = movementCounter * 0.004f;
 
         // Check below and diagonals
         int belowX = x;
@@ -37,6 +49,7 @@ public class Water : Pixel
         if (belowEmpty)
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
+            movementCounter = 0;
         }
         // If both diagonal cells below are empty, move based on the last direction it moved
         else if (rightBelowEmpty && leftBelowEmpty && leftEmpty && rightEmpty)
@@ -45,11 +58,13 @@ public class Water : Pixel
             {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
                 GridMethods.MovePixel(rightX, y, rightX, belowY, grid);
+                movementCounter = 0;
             }
             else if (this.LastDirection == -1)
             {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
                 GridMethods.MovePixel(leftX, y, leftX, belowY, grid);
+                movementCounter = 0;
             }
             else
             {
@@ -58,46 +73,65 @@ public class Water : Pixel
                 {
                     GridMethods.MovePixel(x, y, rightX, y, grid);
                     GridMethods.MovePixel(rightX, y, rightX, belowY, grid);
+                    movementCounter = 0;
                     this.LastDirection = 1;
                 }
                 else
                 {
                     GridMethods.MovePixel(x, y, leftX, y, grid);
                     GridMethods.MovePixel(leftX, y, leftX, belowY, grid);
+                    movementCounter = 0;
                     this.LastDirection = -1;
                 }
             }
+        }
+        else if (movementCounter >= maxMovement)
+        {
+            // If the pixel has moved less than the max movement, stop movement, do nothing
         }
         // Only down-right free
         else if (rightBelowEmpty && rightEmpty)
         {
             GridMethods.MovePixel(x, y, rightX, y, grid);
             GridMethods.MovePixel(rightX, y, rightX, belowY, grid);
+            // Reset counter as it moved downwards
+            movementCounter = 0;
         }
         // Only down-left free
         else if (leftBelowEmpty && leftEmpty)
         {
             GridMethods.MovePixel(x, y, leftX, y, grid);
             GridMethods.MovePixel(leftX, y, leftX, belowY, grid);
+            movementCounter = 0;
         }
         // If both left and right sides are empty, keep moving sideways based on the last direction
         else if (leftEmpty && rightEmpty && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth) && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth))
         {
             if (this.LastDirection == 1)
+            {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
+                // Count the movement as it didn't go downwards
+                movementCounter++;
+            }
             else if (this.LastDirection == -1)
+            {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
+                movementCounter++;
+            }
+
             else
             {
                 // No direction set yet, choose randomly, and set LastDirection
                 if (random.Next(2) == 0)
                 {
                     GridMethods.MovePixel(x, y, rightX, y, grid);
+                    movementCounter++;
                     this.LastDirection = 1;
                 }
                 else
                 {
                     GridMethods.MovePixel(x, y, leftX, y, grid);
+                    movementCounter++;
                     this.LastDirection = -1;
                 }
             }
@@ -108,11 +142,13 @@ public class Water : Pixel
             if (grid[leftX, y] == null)
             {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
+                movementCounter++;
                 this.LastDirection = -1;
             }
             else
             {
                 GridMethods.MovePixel(x, y, x, y, grid);
+                movementCounter++;
                 this.LastDirection = 0;
             }
         }
@@ -121,6 +157,7 @@ public class Water : Pixel
             if (grid[rightX, y] == null)
             {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
+                movementCounter++;
                 this.LastDirection = 1;
             }
             else
