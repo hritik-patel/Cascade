@@ -1,3 +1,5 @@
+using System;
+using Microsoft.Xna.Framework;
 public class WetSand : Sand
 {
     public WetSand()
@@ -43,7 +45,7 @@ public class WetSand : Sand
         }
         else if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
         {
-            GridMethods.MovePixel(x, y, belowX, belowY, grid);
+            GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             // Set new fall delay after falling through water
             this.FallDelay = 0.0625f;
         }

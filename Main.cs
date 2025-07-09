@@ -1,9 +1,16 @@
-﻿namespace Cascade;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Cascade;
 
 public class Main : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private SpriteFont _debugFont;
     private Rectangle gameArea;
     private Rectangle selectionPanel;
     private Rectangle debugPanel;
@@ -15,6 +22,10 @@ public class Main : Game
     private Pixel?[,] grid;
     private Random random = new Random();
     private float deltaTime;
+    private int cells = 0;
+    private int sandCount = 0;
+    private int waterCount = 0;
+    private int wetSandCount = 0;
 
     public Main()
     {
@@ -56,6 +67,7 @@ public class Main : Game
         // Create a 1x1 white texture for drawing pixels
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         pixelTexture.SetData(new[] { Color.White });
+        _debugFont = Content.Load<SpriteFont>("DebugFont");
     }
 
     protected override void Update(GameTime gameTime)
@@ -129,6 +141,10 @@ public class Main : Game
         _spriteBatch.Draw(pixelTexture, gameArea, Color.Black);
         _spriteBatch.Draw(pixelTexture, selectionPanel, Color.Gray);
         _spriteBatch.Draw(pixelTexture, debugPanel, Color.DarkRed);
+        _spriteBatch.DrawString(_debugFont, "Pixel count: " + cells, new Vector2(1030, 410), Color.White);
+        _spriteBatch.DrawString(_debugFont, "Sand count: " + sandCount, new Vector2(1030, 450), Color.White);
+        _spriteBatch.DrawString(_debugFont, "Wet Sand count: " + wetSandCount, new Vector2(1030, 490), Color.White);
+        _spriteBatch.DrawString(_debugFont, "Water count: " + waterCount, new Vector2(1030, 530), Color.White);
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -152,14 +168,34 @@ public class Main : Game
     }
 
     private void UpdateGrid(float deltaTime)
-    {
+    {   
+        // Reset counts
+        cells = 0;
+        sandCount = 0;
+        waterCount = 0;
+        wetSandCount = 0;
         // Reset all HasUpdated flags
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
             {
                 if (grid[x, y] != null)
+                {
+                    cells++;
                     grid[x, y]!.HasUpdated = false;
+                    switch (grid[x, y]!.GetType())
+                    {
+                        case PixelType.Sand:
+                            sandCount++;
+                            break;
+                        case PixelType.Water:
+                            waterCount++;
+                            break;
+                        case PixelType.WetSand:
+                            wetSandCount++;
+                            break;
+                    }
+                }
             }
         }
 

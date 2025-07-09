@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 public static class GridMethods
 {
     // Check if the coordinates (x, y) are within the grid bounds

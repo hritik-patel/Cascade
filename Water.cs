@@ -1,3 +1,5 @@
+using System;
+using Microsoft.Xna.Framework;
 public class Water : Pixel
 {
     private int maxMovement = 50;
@@ -112,8 +114,8 @@ public class Water : Pixel
         else if (
             leftEmpty
             && rightEmpty
-            && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth)
-            && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth)
+            && GridMethods.IsInBounds(leftX, y, gridWidth, gridHeight)
+            && GridMethods.IsInBounds(rightX, y, gridWidth, gridHeight)
         )
         {
             if (this.LastDirection == 1)
@@ -148,7 +150,7 @@ public class Water : Pixel
         else if (
             leftEmpty
             && !rightEmpty
-            && GridMethods.IsInBounds(leftX, y, gridHeight, gridWidth)
+            && GridMethods.IsInBounds(leftX, y, gridWidth, gridHeight)
         )
         {
             if (grid[leftX, y] == null)
@@ -167,7 +169,7 @@ public class Water : Pixel
         else if (
             !leftEmpty
             && rightEmpty
-            && GridMethods.IsInBounds(rightX, y, gridHeight, gridWidth)
+            && GridMethods.IsInBounds(rightX, y, gridWidth, gridHeight)
         )
         {
             if (grid[rightX, y] == null)
