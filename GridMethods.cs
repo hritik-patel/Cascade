@@ -1,0 +1,68 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System;
+public static class GridMethods
+{
+    // Check if the coordinates (x, y) are within the grid bounds
+    public static bool IsInBounds(int x, int y, int gridWidth, int gridHeight)
+    {
+        return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
+    }
+
+    // Check if the cell at (x, y) is empty
+    public static bool IsCellEmpty(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
+    {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
+        {
+            return false;
+        }
+        return grid[x, y] == null;
+    }
+
+    // Move a pixel from one cell to another
+    public static void MovePixel(int fromX, int fromY, int toX, int toY, Pixel?[,] grid)
+    {
+        var pixel = grid[fromX, fromY];
+        if (pixel == null)
+        {
+            return;
+        }
+
+        grid[toX, toY] = pixel;
+        grid[fromX, fromY] = null;
+        pixel.Position = new Vector2(toX, toY);
+        pixel.HasUpdated = true;
+    }
+
+    // Check if the cell at (x, y) is water
+    public static bool IsCellWater(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
+    {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
+        {
+            return false;
+        }
+        return grid[x, y]?.Type == PixelType.Water;
+    }
+
+    // Swap two pixels in the grid
+    public static void SwapPixel(int fromX, int fromY, int toX, int toY, Pixel?[,] grid)
+    {
+        var fromPixel = grid[fromX, fromY];
+        var toPixel = grid[toX, toY];
+
+        if (fromPixel == null || toPixel == null)
+        {
+            return;
+        }
+
+        // Swap the pixels
+        grid[fromX, fromY] = toPixel;
+        grid[toX, toY] = fromPixel;
+
+        // Update their positions
+        fromPixel.Position = new Vector2(toX, toY);
+        toPixel.Position = new Vector2(fromX, fromY);
+    }
+}
