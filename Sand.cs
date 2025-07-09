@@ -50,9 +50,9 @@ public class Sand : Pixel
         else if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
-            // Set new fall delay after falling through water and change the colour to a darker shade
+            // Set new fall delay after falling through water and change the type to WetSand
             this.FallDelay = 0.0625f;
-            this.ChangeType(PixelType.WetSand, grid, x, y);
+            this.ChangeType(PixelType.WetSand, grid, belowX, belowY);
         }
         else if (leftBelowEmpty && !rightBelowEmpty && leftEmpty)
         {

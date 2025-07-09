@@ -42,6 +42,9 @@ public class Pixel
                 Color = Color.Blue;
                 break;
             case PixelType.WetSand:
+                // Remove the old pixel and create a new WetSand pixel
+                grid[x, y] = null;
+                grid[x, y - 1] = null;
                 grid[x, y] = new WetSand();
                 break;
         }
