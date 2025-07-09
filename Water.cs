@@ -1,8 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
+
 public class Water : Pixel
 {
-    private int maxMovement = 50;
+    private int maxMovement = 100;
     private int movementCounter = 0;
 
     public Water()
@@ -56,6 +57,12 @@ public class Water : Pixel
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
             movementCounter = 0;
+        }
+        // If the cell below is sand, 'soak' into it and turn it into wet sand
+        else if (GridMethods.IsCellSand(belowX, belowY, gridWidth, gridHeight, grid))
+        {
+            GridMethods.SwapPixel(x, y, belowX, belowY, grid);
+            this.ChangeType(PixelType.WetSand, grid, belowX, belowY);
         }
         // If both diagonal cells below are empty, move based on the last direction it moved
         else if (rightBelowEmpty && leftBelowEmpty && leftEmpty && rightEmpty)

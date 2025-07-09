@@ -42,6 +42,15 @@ public static class GridMethods
         return grid[x, y]?.Type == PixelType.Water;
     }
 
+    public static bool IsCellSand(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
+    {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
+        {
+            return false;
+        }
+        return grid[x, y]?.Type == PixelType.Sand;
+    }
+
     // Swap two pixels in the grid
     public static void SwapPixel(int fromX, int fromY, int toX, int toY, Pixel?[,] grid)
     {
