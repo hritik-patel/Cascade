@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+
 public class Sand : Pixel
 {
     public bool soaked = false;

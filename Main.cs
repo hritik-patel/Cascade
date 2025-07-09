@@ -26,6 +26,9 @@ public class Main : Game
     private int sandCount = 0;
     private int waterCount = 0;
     private int wetSandCount = 0;
+    private Graph debugGraph;
+    private Texture2D circleTexture;
+    private Texture2D sliceTexture;
 
     public Main()
     {
@@ -68,6 +71,9 @@ public class Main : Game
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         pixelTexture.SetData(new[] { Color.White });
         _debugFont = Content.Load<SpriteFont>("DebugFont");
+        Texture2D circleTexture = Content.Load<Texture2D>("circle");
+        Texture2D sliceTexture = Content.Load<Texture2D>("slice");
+        debugGraph = new Graph(circleTexture, sliceTexture, _spriteBatch);
     }
 
     protected override void Update(GameTime gameTime)
@@ -141,10 +147,32 @@ public class Main : Game
         _spriteBatch.Draw(pixelTexture, gameArea, Color.Black);
         _spriteBatch.Draw(pixelTexture, selectionPanel, Color.Gray);
         _spriteBatch.Draw(pixelTexture, debugPanel, Color.DarkRed);
-        _spriteBatch.DrawString(_debugFont, "Pixel count: " + cells, new Vector2(1030, 410), Color.White);
-        _spriteBatch.DrawString(_debugFont, "Sand count: " + sandCount, new Vector2(1030, 450), Color.White);
-        _spriteBatch.DrawString(_debugFont, "Wet Sand count: " + wetSandCount, new Vector2(1030, 490), Color.White);
-        _spriteBatch.DrawString(_debugFont, "Water count: " + waterCount, new Vector2(1030, 530), Color.White);
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Pixel count: " + cells,
+            new Vector2(1030, 410),
+            Color.White
+        );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Sand count: " + sandCount,
+            new Vector2(1030, 450),
+            Color.White
+        );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Wet Sand count: " + wetSandCount,
+            new Vector2(1030, 490),
+            Color.White
+        );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Water count: " + waterCount,
+            new Vector2(1030, 540),
+            Color.White
+        );
+        Vector2 center = new Vector2(debugPanel.X + 325, debugPanel.Y + 75);
+        debugGraph.DrawGraph(center, cells, sandCount, waterCount, wetSandCount);
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -168,8 +196,7 @@ public class Main : Game
     }
 
     private void UpdateGrid(float deltaTime)
-    {   
-        // Reset counts
+    {
         cells = 0;
         sandCount = 0;
         waterCount = 0;

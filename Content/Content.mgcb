@@ -16,3 +16,13 @@
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /build:DebugFont.spritefont
+
+# Begin slice.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:slice.png
+
+# Begin circle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:circle.png
