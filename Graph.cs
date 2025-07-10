@@ -46,7 +46,7 @@ public class Graph
             Color.White,
             0f,
             new Vector2(baseCircleTexture.Width / 2, baseCircleTexture.Height / 2),
-            1f,
+            1.05f,
             SpriteEffects.None,
             0f
         );
