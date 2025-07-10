@@ -16,9 +16,16 @@ public class Graph
         this.spriteBatch = spriteBatch;
     }
 
-    public void DrawGraph(Vector2 center, int totalCells, int sandCount, int waterCount, int wetSandCount)
+    public void DrawGraph(
+        Vector2 center,
+        int totalCells,
+        int sandCount,
+        int waterCount,
+        int wetSandCount
+    )
     {
-        if (totalCells <= 0) return;
+        if (totalCells <= 0)
+            return;
 
         float sandPercentage = (float)sandCount / totalCells;
         float waterPercentage = (float)waterCount / totalCells;
@@ -28,7 +35,7 @@ public class Graph
         {
             { PixelType.Sand, sandPercentage },
             { PixelType.Water, waterPercentage },
-            { PixelType.WetSand, wetSandPercentage }
+            { PixelType.WetSand, wetSandPercentage },
         };
 
         // Draw base white circle
@@ -49,19 +56,23 @@ public class Graph
         foreach (var kvp in percentages)
         {
             float sweepAngle = kvp.Value * MathHelper.TwoPi;
+            float sliceStep = MathHelper.TwoPi / 360f;
+            int slices = (int)(sweepAngle / sliceStep);
 
-            spriteBatch.Draw(
-                sliceTexture,
-                center,
-                null,
-                GetColorForPixelType(kvp.Key),
-                startRotation,
-                new Vector2(sliceTexture.Width / 2f, sliceTexture.Height),
-                1f,
-                SpriteEffects.None,
-                0f
-            );
-
+            for (int i = 0; i < slices; i++)
+            {
+                spriteBatch.Draw(
+                    sliceTexture,
+                    center,
+                    null,
+                    GetColorForPixelType(kvp.Key),
+                    startRotation + +(i * sliceStep),
+                    new Vector2(sliceTexture.Width / 2f, sliceTexture.Height),
+                    1f,
+                    SpriteEffects.None,
+                    0f
+                );
+            }
             startRotation += sweepAngle;
         }
     }

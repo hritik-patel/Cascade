@@ -145,8 +145,8 @@ public class Main : Game
 
         // Draw the main screen and side screens using colours to differentiate for now
         _spriteBatch.Draw(pixelTexture, gameArea, Color.Black);
-        _spriteBatch.Draw(pixelTexture, selectionPanel, Color.Gray);
-        _spriteBatch.Draw(pixelTexture, debugPanel, Color.DarkRed);
+        _spriteBatch.Draw(pixelTexture, selectionPanel, Color.White);
+        _spriteBatch.Draw(pixelTexture, debugPanel, Color.Gray);
         _spriteBatch.DrawString(
             _debugFont,
             "Pixel count: " + cells,
@@ -168,7 +168,7 @@ public class Main : Game
         _spriteBatch.DrawString(
             _debugFont,
             "Water count: " + waterCount,
-            new Vector2(1030, 540),
+            new Vector2(1030, 530),
             Color.White
         );
         Vector2 center = new Vector2(debugPanel.X + 325, debugPanel.Y + 75);
