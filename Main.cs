@@ -29,6 +29,10 @@ public class Main : Game
     private Graph debugGraph;
     private Texture2D circleTexture;
     private Texture2D sliceTexture;
+    private Button sandButton;
+    private Button waterButton;
+    private Button wetSandButton;
+    private Texture2D buttonTexture;
 
     public Main()
     {
@@ -74,6 +78,29 @@ public class Main : Game
         Texture2D circleTexture = Content.Load<Texture2D>("circle");
         Texture2D sliceTexture = Content.Load<Texture2D>("slice");
         debugGraph = new Graph(circleTexture, sliceTexture, _spriteBatch);
+        buttonTexture = new Texture2D(GraphicsDevice, 1, 1);
+        buttonTexture.SetData(new[] { Color.White });
+        sandButton = new Button(
+            new Rectangle(1030, 10, 100, 40),
+            "Sand",
+            _debugFont,
+            buttonTexture,
+            Color.Yellow
+        );
+        waterButton = new Button(
+            new Rectangle(1160, 10, 100, 40),
+            "Water",
+            _debugFont,
+            buttonTexture,
+            Color.Blue
+        );
+        wetSandButton = new Button(
+            new Rectangle(1290, 10, 100, 40),
+            "Wet Sand",
+            _debugFont,
+            buttonTexture,
+            new Color(216, 160, 28, 200)
+        );
     }
 
     protected override void Update(GameTime gameTime)
@@ -174,6 +201,12 @@ public class Main : Game
         Vector2 center = new Vector2(debugPanel.X + 325, debugPanel.Y + 75);
         debugGraph.DrawGraph(center, cells, sandCount, waterCount, wetSandCount);
 
+        // Draw the buttons in the selection panel
+        // Starting at the top left corner of the selection panel, place buttons in a 2x2 grid
+        sandButton.Draw(_spriteBatch);
+        waterButton.Draw(_spriteBatch);
+        wetSandButton.Draw(_spriteBatch);
+
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
@@ -201,7 +234,7 @@ public class Main : Game
         sandCount = 0;
         waterCount = 0;
         wetSandCount = 0;
-        // Reset all HasUpdated flags
+        // Reset all HasUpdated flags + count cell types for the graph
         for (int y = 0; y < gridHeight; y++)
         {
             for (int x = 0; x < gridWidth; x++)
