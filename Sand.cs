@@ -8,16 +8,6 @@ public class Sand : Pixel
     public Sand(PixelType type, Color color)
         : base(type, color) { }
 
-    private bool checkSoaked()
-    {
-        // Check if the sand pixel is soaked
-        if (soaked)
-        {
-            return true;
-        }
-        return false;
-    }
-
     // If the pixel is a sand pixel, check if it can fall
     // Sand falls down if the cell below is empty or contains water
     // If it falls through water, it changes color and sets a fall delay to simulate a slower fall
@@ -57,8 +47,9 @@ public class Sand : Pixel
         else if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
-            // Set new fall delay after falling through water and change the type to WetSand
+            // Set new fall delay after falling through water and change the type to WetSand, and set soaked to true
             this.FallDelay = 0.0625f;
+            soaked = true;
             this.ChangeType(PixelType.WetSand, grid, belowX, belowY);
         }
         else if (leftBelowEmpty && !rightBelowEmpty && leftEmpty)

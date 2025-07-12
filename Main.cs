@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -33,6 +34,8 @@ public class Main : Game
     private Button waterButton;
     private Button wetSandButton;
     private Texture2D buttonTexture;
+    private List<Button> buttons = new List<Button>();
+    private Pixel pixel;
 
     public Main()
     {
@@ -100,6 +103,10 @@ public class Main : Game
             buttonTexture,
             new Color(216, 160, 28, 200)
         );
+        // Add buttons to the list for easy management
+        buttons.Add(sandButton);
+        buttons.Add(waterButton);
+        buttons.Add(wetSandButton);
     }
 
     protected override void Update(GameTime gameTime)
@@ -120,6 +127,40 @@ public class Main : Game
         // Calculate the mouse position in cell coordinates
         Point mouseGridPos = new Point(mouse.X / cellSize, mouse.Y / cellSize);
 
+        // Check which button is clicked
+        foreach (var button in buttons)
+        {
+            if (button.IsClicked())
+            {
+                foreach (var other in buttons)
+                    other.SetActive(false);
+
+                button.SetActive(true);
+                break;
+            }
+        }
+
+        Button activeButton = buttons.FirstOrDefault(b => b.isActive);
+        if (activeButton != null)
+        {
+            // Set the pixel type based on the active button
+            switch (activeButton.name)
+            {
+                case "Sand":
+                    pixel = new Sand(PixelType.Sand, new Color(250, 235, 25, 200));
+                    break;
+                case "Water":
+                    pixel = new Water();
+                    break;
+                case "Wet Sand":
+                    pixel = new WetSand();
+                    break;
+                default:
+                    pixel = null;
+                    break;
+            }
+        }
+
         // If the left button is pressed and the mouse is within the game area, create a new pixel
         if (mouse.LeftButton == ButtonState.Pressed && gameArea.Contains(mouse.Position))
         {
@@ -134,7 +175,7 @@ public class Main : Game
                 && grid[gridX, gridY] == null
             )
             {
-                grid[gridX, gridY] = new Sand(PixelType.Sand, Color.Yellow);
+                grid[gridX, gridY] = pixel;
             }
         }
 

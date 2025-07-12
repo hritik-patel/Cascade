@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 
 public class WetSand : Sand
-{
+{   
     public WetSand()
         : base(PixelType.WetSand, new Color(216, 160, 28, 200)) { }
 
@@ -20,18 +20,29 @@ public class WetSand : Sand
         this.FallDelay -= deltaTime;
         if (this.FallDelay > 0f)
         {
+            if (!soaked)
+            {
+                this.FallDelay = 0;
+            }
             // Skip this pixel if it hasn't reached its fall delay
             return;
         }
-
-        // Since wet sand is heavier, add a slight fall delay
-        this.FallDelay = 0.1f;
 
         int belowX = x;
         int belowY = y + 1;
 
         int leftX = x - 1;
         int rightX = x + 1;
+
+        // Since wet sand is heavier, add a slight fall delay in water
+        if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
+        {
+            this.FallDelay = 0.125f;
+        }
+        else
+        {
+            this.FallDelay = 0;
+        }
 
         // Checks if the cells are empty to allow movement
         bool belowEmpty = GridMethods.IsCellEmpty(belowX, belowY, gridWidth, gridHeight, grid);
