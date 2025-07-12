@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 
 public class WetSand : Sand
-{   
+{
     public WetSand()
         : base(PixelType.WetSand, new Color(216, 160, 28, 200)) { }
 
