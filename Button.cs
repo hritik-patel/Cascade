@@ -24,23 +24,32 @@ public class Button
     }
 
     // Checks if the button is clicked, if clicked change the colour to gray, else keep the original color
-    public bool IsClicked(MouseState mouse)
+    public bool IsClicked()
     {
+        var mouse = Mouse.GetState();
         Point mousePos = mouse.Position;
         IsHovered = rect.Contains(mousePos);
 
         if (IsHovered && mouse.LeftButton == ButtonState.Pressed)
         {
             color = Color.Gray;
+            Console.WriteLine("Button clicked: " + name);
             return true;
         }
+        else if (IsHovered)
+        {
+            color = Color.White;
+            Console.WriteLine("Button hovered: " + name);
+            return false;
+        }
         color = original;
+        Console.WriteLine("Button not hovered: " + name);
         return false;
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(texture, rect, IsHovered ? Color.Gray : color);
+        spriteBatch.Draw(texture, rect, color);
         // Center the text in the button
         Vector2 textSize = font.MeasureString(name);
         Vector2 textPosition = new Vector2(

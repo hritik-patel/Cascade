@@ -75,6 +75,8 @@ public class Main : Game
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         pixelTexture.SetData(new[] { Color.White });
         _debugFont = Content.Load<SpriteFont>("DebugFont");
+        Texture2D circleTexture = Content.Load<Texture2D>("circle");
+        Texture2D sliceTexture = Content.Load<Texture2D>("slice");
         Texture2D buttonTexture = Content.Load<Texture2D>("button");
         debugGraph = new Graph(circleTexture, sliceTexture, _spriteBatch);
         sandButton = new Button(
@@ -118,7 +120,7 @@ public class Main : Game
         // Calculate the mouse position in cell coordinates
         Point mouseGridPos = new Point(mouse.X / cellSize, mouse.Y / cellSize);
 
-        // If the left button is pressed and the mouse is within the game area, create a new sand pixel
+        // If the left button is pressed and the mouse is within the game area, create a new pixel
         if (mouse.LeftButton == ButtonState.Pressed && gameArea.Contains(mouse.Position))
         {
             var gridX = mouse.X / cellSize;
@@ -155,6 +157,9 @@ public class Main : Game
         }
 
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        sandButton.IsClicked();
+        waterButton.IsClicked();
+        wetSandButton.IsClicked();
         // Update the grid for specific pixel types
         UpdateGrid(deltaTime);
         base.Update(gameTime);
