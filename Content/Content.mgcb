@@ -26,3 +26,8 @@
 /importer:TextureImporter
 /processor:TextureProcessor
 /build:circle.png
+
+# Begin circle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/build:button.png

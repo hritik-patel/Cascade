@@ -75,11 +75,8 @@ public class Main : Game
         pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         pixelTexture.SetData(new[] { Color.White });
         _debugFont = Content.Load<SpriteFont>("DebugFont");
-        Texture2D circleTexture = Content.Load<Texture2D>("circle");
-        Texture2D sliceTexture = Content.Load<Texture2D>("slice");
+        Texture2D buttonTexture = Content.Load<Texture2D>("button");
         debugGraph = new Graph(circleTexture, sliceTexture, _spriteBatch);
-        buttonTexture = new Texture2D(GraphicsDevice, 1, 1);
-        buttonTexture.SetData(new[] { Color.White });
         sandButton = new Button(
             new Rectangle(1030, 10, 100, 40),
             "Sand",
