@@ -29,7 +29,10 @@ public class Pixel
         HasUpdated = false;
         FallDelay = 0;
         LastDirection = 0;
-        Color = variate(color);
+        if (type == PixelType.Water)
+        {
+            Color = Variate(color);
+        }
     }
 
     public void ChangeType(PixelType newType, Pixel?[,] grid, int x, int y)
@@ -57,34 +60,18 @@ public class Pixel
         return Type;
     }
 
-    public Color variate(Color color)
+    public Color Variate(Color color)
     {
-        // Randomly vary the color slightly, with a 10% chance
         if (random.Next(0, 100) < 50)
         {
-            byte r = color.R;
-            byte g = color.G;
-            byte b = color.B;
+            HSLColour hsl = HSLColour.FromRGB(color.R, color.G, color.B);
 
-            // Finding the largest value in the color either r, g, or b
-            // and then randomly varying that value by 10% of its original value
-            if (r >= g && r >= b)
-            {
-                int delta = (int)(r * 0.1);
-                r = (byte)Math.Clamp(r + random.Next(-delta/4, delta + 1), 0, 255);
-            }
-            else if (g >= r && g >= b)
-            {
-                int delta = (int)(g * 0.1);
-                g = (byte)Math.Clamp(g + random.Next(-delta/4, delta + 1), 0, 255);
-            }
-            else
-            {
-                int delta = (int)(b * 0.1);
-                b = (byte)Math.Clamp(b + random.Next(-delta/4, delta + 1), 0, 255);
-            }
+            // Shift hue by +-10 degrees
+            float offset = random.Next(-10, 10) / 360f;
+            hsl.Hue = (hsl.Hue + offset + 1f) % 1f;
 
-            return new Color(r, g, b, color.A);
+            Color varied = hsl.ToRGB();
+            return new Color(varied.R, varied.G, varied.B, color.A);
         }
 
         return color;
