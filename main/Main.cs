@@ -183,24 +183,6 @@ public class Main : Game
             }
         }
 
-        // If the right button is pressed and the mouse is within the game area, create a new water pixel
-        if (kstate.IsKeyDown(Keys.W) && gameArea.Contains(mouse.Position))
-        {
-            var gridX = mouse.X / cellSize;
-            var gridY = mouse.Y / cellSize;
-
-            if (
-                gridX >= 0
-                && gridX < gridWidth
-                && gridY >= 0
-                && gridY < gridHeight
-                && grid[gridX, gridY] == null
-            )
-            {
-                grid[gridX, gridY] = new Water();
-            }
-        }
-
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         sandButton.IsClicked();
         waterButton.IsClicked();
