@@ -81,9 +81,9 @@ public class Graph
     {
         return type switch
         {
-            PixelType.Sand => Color.Yellow,
-            PixelType.Water => Color.Blue,
-            PixelType.WetSand => new Color(216, 160, 28),
+            PixelType.Sand => new Color(225, 191, 146, 200),
+            PixelType.Water => new Color(100, 149, 237, 200),
+            PixelType.WetSand => new Color(216, 160, 28, 200),
             _ => Color.Gray,
         };
     }

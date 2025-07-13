@@ -7,7 +7,7 @@ public class Water : Pixel
     private int movementCounter = 0;
 
     public Water()
-        : base(PixelType.Water, new Color(0, 50, 255, 200)) { }
+        : base(PixelType.Water, new Color(100, 149, 237, 200)) { }
 
     // If the pixel is a water pixel, check if it can fall or move sideways/diagonally
     // Priority is given to falling down, then diagonally down, then sideways

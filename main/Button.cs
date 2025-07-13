@@ -10,18 +10,27 @@ public class Button
     private SpriteFont font;
     public String name;
     private Texture2D texture;
+    private Texture2D selectedTexture;
     public bool isActive = false;
     private Color baseColor;
     private Color hoverColor;
     private Color activeColor;
     private Color currentColor;
 
-    public Button(Rectangle rectangle, String name, SpriteFont font, Texture2D texture, Color color)
+    public Button(
+        Rectangle rectangle,
+        String name,
+        SpriteFont font,
+        Texture2D texture,
+        Texture2D selectedTexture,
+        Color color
+    )
     {
         rect = rectangle;
         this.name = name;
         this.font = font;
         this.texture = texture;
+        this.selectedTexture = selectedTexture;
         baseColor = color;
         hoverColor = TintColor(baseColor, 20);
         activeColor = TintColor(baseColor, -30);
@@ -61,7 +70,13 @@ public class Button
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(texture, rect, currentColor);
+        if (isActive)
+            spriteBatch.Draw(selectedTexture, rect, currentColor);
+        else
+        {
+            spriteBatch.Draw(texture, rect, currentColor);
+        }
+        
         // Center the text in the button
         Vector2 textSize = font.MeasureString(name);
         Vector2 textPosition = new Vector2(

@@ -81,26 +81,30 @@ public class Main : Game
         Texture2D circleTexture = Content.Load<Texture2D>("circle");
         Texture2D sliceTexture = Content.Load<Texture2D>("slice");
         Texture2D buttonTexture = Content.Load<Texture2D>("button");
+        Texture2D selectedButtonTexture = Content.Load<Texture2D>("button_selected");
         debugGraph = new Graph(circleTexture, sliceTexture, _spriteBatch);
         sandButton = new Button(
             new Rectangle(1030, 10, 100, 40),
             "Sand",
             _debugFont,
             buttonTexture,
-            Color.Yellow
+            selectedButtonTexture,
+            new Color(225, 191, 146, 200)
         );
         waterButton = new Button(
             new Rectangle(1160, 10, 100, 40),
             "Water",
             _debugFont,
             buttonTexture,
-            Color.Blue
+            selectedButtonTexture,
+            new Color(100, 149, 237, 200)
         );
         wetSandButton = new Button(
             new Rectangle(1290, 10, 100, 40),
             "Wet Sand",
             _debugFont,
             buttonTexture,
+            selectedButtonTexture,
             new Color(216, 160, 28, 200)
         );
         // Add buttons to the list for easy management
@@ -147,7 +151,7 @@ public class Main : Game
             switch (activeButton.name)
             {
                 case "Sand":
-                    pixel = new Sand(PixelType.Sand, new Color(250, 235, 25, 200));
+                    pixel = new Sand(PixelType.Sand, new Color(225, 191, 146, 200));
                     break;
                 case "Water":
                     pixel = new Water();
