@@ -76,7 +76,7 @@ public class Button
         {
             spriteBatch.Draw(texture, rect, currentColor);
         }
-        
+
         // Center the text in the button
         Vector2 textSize = font.MeasureString(name);
         Vector2 textPosition = new Vector2(

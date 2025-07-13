@@ -29,6 +29,7 @@ public class Pixel
         HasUpdated = false;
         FallDelay = 0;
         LastDirection = 0;
+        Color = variate(color);
     }
 
     public void ChangeType(PixelType newType, Pixel?[,] grid, int x, int y)
@@ -37,10 +38,10 @@ public class Pixel
         switch (newType)
         {
             case PixelType.Sand:
-                Color = Color.Yellow;
+                Color = new Color(225, 191, 146, 200);
                 break;
             case PixelType.Water:
-                Color = Color.Blue;
+                Color = new Color(100, 149, 237, 200);
                 break;
             case PixelType.WetSand:
                 // Remove the old pixel and create a new WetSand pixel
@@ -54,6 +55,39 @@ public class Pixel
     public PixelType GetType()
     {
         return Type;
+    }
+
+    public Color variate(Color color)
+    {
+        // Randomly vary the color slightly, with a 10% chance
+        if (random.Next(0, 100) < 50)
+        {
+            byte r = color.R;
+            byte g = color.G;
+            byte b = color.B;
+
+            // Finding the largest value in the color either r, g, or b
+            // and then randomly varying that value by 10% of its original value
+            if (r >= g && r >= b)
+            {
+                int delta = (int)(r * 0.1);
+                r = (byte)Math.Clamp(r + random.Next(-delta/4, delta + 1), 0, 255);
+            }
+            else if (g >= r && g >= b)
+            {
+                int delta = (int)(g * 0.1);
+                g = (byte)Math.Clamp(g + random.Next(-delta/4, delta + 1), 0, 255);
+            }
+            else
+            {
+                int delta = (int)(b * 0.1);
+                b = (byte)Math.Clamp(b + random.Next(-delta/4, delta + 1), 0, 255);
+            }
+
+            return new Color(r, g, b, color.A);
+        }
+
+        return color;
     }
 
     public virtual void PixelUpdate(
