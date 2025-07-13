@@ -5,6 +5,8 @@ public class Water : Pixel
 {
     private int maxMovement = 100;
     private int movementCounter = 0;
+    private bool waterLocked = false;
+    private float lastAnimated;
 
     public Water()
         : base(PixelType.Water, new Color(100, 149, 237, 200)) { }
@@ -188,6 +190,21 @@ public class Water : Pixel
             else
             {
                 this.LastDirection = 0;
+            }
+        }
+        // If it is 'waterLocked' (surrouned by water), 'animate' it.
+        else if (GridMethods.IsCellWaterLocked(x, y, gridWidth, gridHeight, grid))
+        {
+            if (lastAnimated > 0f)
+            {
+                lastAnimated -= deltaTime;
+            }
+            else
+            {
+                var pixel = grid[x, y];
+                pixel.Color = Variate(new Color(100, 149, 237, 200));
+                double nextVariation = 0.1 + random.NextDouble() * (0.5 - 0.1);
+                lastAnimated += (float)nextVariation;
             }
         }
         else

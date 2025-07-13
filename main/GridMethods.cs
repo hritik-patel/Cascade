@@ -45,6 +45,39 @@ public static class GridMethods
         return grid[x, y]?.Type == PixelType.Water;
     }
 
+    public static bool IsCellWaterLocked(
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Pixel?[,] grid
+    )
+    {
+        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
+        {
+            return false;
+        }
+        // Loop through surrounding cells (3x3 block centered on x,y)
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                // Ignore itself
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                int nx = x + dx;
+                int ny = y + dy;
+
+                // If anything isnt water around it, return false
+                if (!IsCellWater(nx, ny, gridWidth, gridHeight, grid))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
     public static bool IsCellSand(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
     {
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
