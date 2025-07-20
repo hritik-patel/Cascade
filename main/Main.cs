@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -27,12 +27,14 @@ public class Main : Game
     private int sandCount = 0;
     private int waterCount = 0;
     private int wetSandCount = 0;
+    private int fireCount = 0;
     private Graph debugGraph;
     private Texture2D circleTexture;
     private Texture2D sliceTexture;
     private Button sandButton;
     private Button waterButton;
     private Button wetSandButton;
+    private Button fireButton;
     private Texture2D buttonTexture;
     private List<Button> buttons = new List<Button>();
     private Pixel pixel;
@@ -107,10 +109,19 @@ public class Main : Game
             selectedButtonTexture,
             new Color(216, 160, 28, 200)
         );
+        fireButton = new Button(
+            new Rectangle(1030, 65, 100, 40),
+            "Fire",
+            _debugFont,
+            buttonTexture,
+            selectedButtonTexture,
+            new Color(255, 100, 0, 200)
+        );
         // Add buttons to the list for easy management
         buttons.Add(sandButton);
         buttons.Add(waterButton);
         buttons.Add(wetSandButton);
+        buttons.Add(fireButton);
     }
 
     protected override void Update(GameTime gameTime)
@@ -159,6 +170,9 @@ public class Main : Game
                 case "Wet Sand":
                     pixel = new WetSand();
                     break;
+                case "Fire":
+                    pixel = new Fire();
+                    break;
                 default:
                     pixel = null;
                     break;
@@ -187,6 +201,7 @@ public class Main : Game
         sandButton.IsClicked();
         waterButton.IsClicked();
         wetSandButton.IsClicked();
+        fireButton.IsClicked();
         // Update the grid for specific pixel types
         UpdateGrid(deltaTime);
         base.Update(gameTime);
@@ -227,14 +242,21 @@ public class Main : Game
             new Vector2(1030, 530),
             Color.White
         );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Fire: " + fireCount,
+            new Vector2(1030, 570),
+            Color.White
+        );
         Vector2 center = new Vector2(debugPanel.X + 325, debugPanel.Y + 75);
-        debugGraph.DrawGraph(center, cells, sandCount, waterCount, wetSandCount);
+        debugGraph.DrawGraph(center, cells, sandCount, waterCount, wetSandCount, fireCount);
 
         // Draw the buttons in the selection panel
         // Starting at the top left corner of the selection panel, place buttons in a 2x2 grid
         sandButton.Draw(_spriteBatch);
         waterButton.Draw(_spriteBatch);
         wetSandButton.Draw(_spriteBatch);
+        fireButton.Draw(_spriteBatch);
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -263,6 +285,7 @@ public class Main : Game
         sandCount = 0;
         waterCount = 0;
         wetSandCount = 0;
+        fireCount = 0;
         // Reset all HasUpdated flags + count cell types for the graph
         for (int y = 0; y < gridHeight; y++)
         {
@@ -282,6 +305,9 @@ public class Main : Game
                             break;
                         case PixelType.WetSand:
                             wetSandCount++;
+                            break;
+                        case PixelType.Fire:
+                            fireCount++;
                             break;
                     }
                 }

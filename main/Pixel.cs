@@ -8,6 +8,7 @@ public enum PixelType
     Sand,
     Water,
     WetSand,
+    Fire,
 }
 
 public class Pixel
@@ -29,7 +30,7 @@ public class Pixel
         HasUpdated = false;
         FallDelay = 0;
         LastDirection = 0;
-        if (type == PixelType.Water)
+        if (type == PixelType.Water || type == PixelType.Fire)
         {
             Color = Variate(color);
         }

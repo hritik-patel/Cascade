@@ -21,7 +21,8 @@ public class Graph
         int totalCells,
         int sandCount,
         int waterCount,
-        int wetSandCount
+        int wetSandCount,
+        int fireCount
     )
     {
         if (totalCells <= 0)
@@ -30,12 +31,14 @@ public class Graph
         float sandPercentage = (float)sandCount / totalCells;
         float waterPercentage = (float)waterCount / totalCells;
         float wetSandPercentage = (float)wetSandCount / totalCells;
+        float firePercentage = (float)fireCount / totalCells;
 
         var percentages = new Dictionary<PixelType, float>
         {
             { PixelType.Sand, sandPercentage },
             { PixelType.Water, waterPercentage },
             { PixelType.WetSand, wetSandPercentage },
+            { PixelType.Fire, firePercentage },
         };
 
         // Draw base white circle
@@ -84,6 +87,7 @@ public class Graph
             PixelType.Sand => new Color(225, 191, 146, 200),
             PixelType.Water => new Color(100, 149, 237, 200),
             PixelType.WetSand => new Color(216, 160, 28, 200),
+            PixelType.Fire => new Color(255, 100, 0, 200),
             _ => Color.Gray,
         };
     }
