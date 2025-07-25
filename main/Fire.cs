@@ -21,8 +21,6 @@ public class Fire : Pixel
         float deltaTime
     )
     {
-        TryMoveUp(x, y, grid, gridWidth, gridHeight, random);
-
         // Darken the pixel over time to black
         hsl.Luminosity -= 0.01f;
         if (hsl.Luminosity <= 0f)
@@ -31,6 +29,14 @@ public class Fire : Pixel
             return;
         }
         Color = hsl.ToRGB();
+
+        this.FallDelay -= deltaTime;
+        if (this.FallDelay > 0f)
+        {
+            return;
+        }
+
+        TryMoveUp(x, y, grid, gridWidth, gridHeight, random);
     }
 
     // Move the fire pixel up or to the side randomly
@@ -49,9 +55,10 @@ public class Fire : Pixel
         // Randomise which cell it moves to
         foreach (var (tx, ty) in targets.OrderBy(pos => random.Next()))
         {
-            if (GridMethods.IsInBounds(tx, ty, gridWidth, gridHeight) && grid[tx, ty] == null)
+            if (GridMethods.IsInBounds(tx, ty, gridWidth, gridHeight) && (grid[tx, ty] == null))
             {
-                GridMethods.SwapPixel(x, y, tx, ty, grid);
+                GridMethods.MovePixel(x, y, tx, ty, grid);
+                this.FallDelay += 0.125f;
                 break;
             }
         }
