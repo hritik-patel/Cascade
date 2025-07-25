@@ -171,7 +171,7 @@ public class Main : Game
                     pixel = new WetSand();
                     break;
                 case "Fire":
-                    pixel = new Fire();
+                    pixel = new Fire(PixelType.Fire, new Color(255, 100, 0, 200));
                     break;
                 default:
                     pixel = null;

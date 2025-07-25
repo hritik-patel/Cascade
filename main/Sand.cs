@@ -44,7 +44,7 @@ public class Sand : Pixel
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
         }
-        else if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
+        else if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             // Set new fall delay after falling through water and change the type to WetSand, and set soaked to true

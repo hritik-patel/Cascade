@@ -35,7 +35,7 @@ public class WetSand : Sand
         int rightX = x + 1;
 
         // Since wet sand is heavier, add a slight fall delay in water
-        if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
+        if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
             this.FallDelay = 0.125f;
         }
@@ -55,7 +55,7 @@ public class WetSand : Sand
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
         }
-        else if (GridMethods.IsCellWater(belowX, belowY, gridWidth, gridHeight, grid))
+        else if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             // Set new fall delay after falling through water

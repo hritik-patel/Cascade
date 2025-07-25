@@ -8,8 +8,8 @@ public class Fire : Pixel
     // HSL makes it easier to darken
     public HSLColour hsl = new HSLColour(0.0666f, 1f, 0.5f);
 
-    public Fire()
-        : base(PixelType.Fire, new Color(255, 100, 0, 200)) { }
+    public Fire(PixelType type, Color colour)
+        : base(type, colour) { }
 
     public override void PixelUpdate(
         Pixel?[,] grid,
@@ -35,7 +35,7 @@ public class Fire : Pixel
         {
             return;
         }
-
+        TryHeat(x, y, grid, gridWidth, gridHeight);
         TryMoveUp(x, y, grid, gridWidth, gridHeight, random);
     }
 
@@ -60,6 +60,33 @@ public class Fire : Pixel
                 GridMethods.MovePixel(x, y, tx, ty, grid);
                 this.FallDelay += 0.125f;
                 break;
+            }
+        }
+    }
+
+    public void TryHeat(int x, int y, Pixel?[,] grid, int gridWidth, int gridHeight)
+    {
+        for (int dx = -2; dx <= 2; dx++)
+        {
+            for (int dy = -2; dy <= 2; dy++)
+            {
+                int nx = x + dx;
+                int ny = y + dy;
+
+                if (!GridMethods.IsInBounds(nx, ny, gridWidth, gridHeight))
+                    continue;
+
+                var neighbor = grid[nx, ny];
+                if (neighbor is Water water)
+                {
+                    double distance = Math.Sqrt(dx * dx + dy * dy);
+                    // Ignore itself
+                    if (distance == 0)
+                        continue;
+                    // Heat up the water pixel based on the distance from the fire pixel
+                    int heat = (int)(5 / distance);
+                    water.heat(heat);
+                }
             }
         }
     }

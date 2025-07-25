@@ -36,13 +36,20 @@ public static class GridMethods
     }
 
     // Check if the cell at (x, y) is water
-    public static bool IsCellWater(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
+    public static bool IsCellX(
+        int x,
+        int y,
+        int gridWidth,
+        int gridHeight,
+        Pixel?[,] grid,
+        PixelType type
+    )
     {
         if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
         {
             return false;
         }
-        return grid[x, y]?.Type == PixelType.Water;
+        return grid[x, y]?.Type == type;
     }
 
     public static bool IsCellWaterLocked(
@@ -70,21 +77,12 @@ public static class GridMethods
                 int ny = y + dy;
 
                 // If anything isnt water around it, return false
-                if (!IsCellWater(nx, ny, gridWidth, gridHeight, grid))
+                if (!IsCellX(nx, ny, gridWidth, gridHeight, grid, PixelType.Water))
                     return false;
             }
         }
 
         return true;
-    }
-
-    public static bool IsCellSand(int x, int y, int gridWidth, int gridHeight, Pixel?[,] grid)
-    {
-        if (x < 0 || x >= gridWidth || y < 0 || y >= gridHeight)
-        {
-            return false;
-        }
-        return grid[x, y]?.Type == PixelType.Sand;
     }
 
     // Swap two pixels in the grid

@@ -9,6 +9,7 @@ public enum PixelType
     Water,
     WetSand,
     Fire,
+    Steam,
 }
 
 public class Pixel
@@ -52,6 +53,11 @@ public class Pixel
                 grid[x, y] = null;
                 grid[x, y - 1] = null;
                 grid[x, y] = new WetSand();
+                break;
+            case PixelType.Steam:
+                grid[x, y] = null;
+                grid[x, y - 1] = null;
+                grid[x, y] = new Steam();
                 break;
         }
     }

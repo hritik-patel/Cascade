@@ -5,6 +5,7 @@ public class Water : Pixel
 {
     private int maxMovement = 100;
     private int movementCounter = 0;
+    private int temp = 20;
     private bool waterLocked = false;
     private float lastAnimated;
 
@@ -60,8 +61,12 @@ public class Water : Pixel
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
             movementCounter = 0;
         }
+        else if (temp > 100)
+        {
+            this.ChangeType(PixelType.Steam, grid, x, y);
+        }
         // If the cell below is sand, 'soak' into it and turn it into wet sand
-        else if (GridMethods.IsCellSand(belowX, belowY, gridWidth, gridHeight, grid))
+        else if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Sand))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             this.ChangeType(PixelType.WetSand, grid, belowX, belowY);
@@ -213,5 +218,22 @@ public class Water : Pixel
             // Reset last direction if no move is made
             this.LastDirection = 0;
         }
+    }
+
+    public void heat(int x)
+    {
+        temp += x;
+    }
+
+    public void cool(int x)
+    {
+        int y = temp - x;
+        if (y > 20)
+            temp = y;
+    }
+
+    public int getTemp()
+    {
+        return temp;
     }
 }
