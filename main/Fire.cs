@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 public class Fire : Pixel
 {
     // HSL makes it easier to darken
-    public HSLColour hsl = new HSLColour(24f, 1f, 0.5f);
+    public HSLColour hsl = new HSLColour(0.0666f, 1f, 0.5f);
 
     public Fire()
         : base(PixelType.Fire, new Color(255, 100, 0, 200)) { }

@@ -79,8 +79,6 @@ public class HSLColour
             g,
             b;
 
-        double h = Hue / 360.0;
-
         if (Saturation == 0)
         {
             r = (byte)Math.Round(Luminosity * 255d);
@@ -91,7 +89,7 @@ public class HSLColour
         {
             double t1,
                 t2;
-            double th = h;
+            double th = Hue;
 
             if (Luminosity < 0.5d)
             {
