@@ -22,13 +22,13 @@ public class Steam : Fire
         hsl.Luminosity -= 0.0025f;
         if (hsl.Luminosity <= 0f)
         {
-            grid[(int)Position.X, (int)Position.Y] = null;
+            grid[(int)position.X, (int)position.Y] = null;
             return;
         }
-        Color = hsl.ToRGB();
+        color = hsl.ToRGB();
 
-        this.FallDelay -= deltaTime;
-        if (this.FallDelay > 0f)
+        this.fallDelay -= deltaTime;
+        if (this.fallDelay > 0f)
         {
             return;
         }

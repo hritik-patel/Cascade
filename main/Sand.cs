@@ -21,8 +21,8 @@ public class Sand : Pixel
         float deltaTime
     )
     {
-        this.FallDelay -= deltaTime;
-        if (this.FallDelay > 0f)
+        this.fallDelay -= deltaTime;
+        if (this.fallDelay > 0f)
         {
             // Skip this pixel if it hasn't reached its fall delay
             return;
@@ -44,11 +44,15 @@ public class Sand : Pixel
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
         }
+        else if (temp > 100)
+        {
+            this.ChangeType(PixelType.Glass, grid, x, y);
+        }
         else if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             // Set new fall delay after falling through water and change the type to WetSand, and set soaked to true
-            this.FallDelay = 0.0625f;
+            this.fallDelay = 0.0625f;
             soaked = true;
             this.ChangeType(PixelType.WetSand, grid, belowX, belowY);
         }

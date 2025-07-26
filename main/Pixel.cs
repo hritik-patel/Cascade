@@ -10,43 +10,46 @@ public enum PixelType
     WetSand,
     Fire,
     Steam,
+    Glass,
 }
 
 public class Pixel
 {
-    public Vector2 Position;
-    public Color Color;
-    public PixelType Type;
-    public float FallDelay;
-    public bool HasUpdated;
+    public Vector2 position;
+    public Color color;
+    public PixelType type;
+    public float fallDelay;
+    public bool hasUpdated;
+    public int temp;
     public Random random = new Random();
 
     // -1 = left, 1 = right, 0 = no direction yet
-    public int LastDirection;
+    public int lastDirection;
 
     public Pixel(PixelType type, Color color)
     {
-        Color = color;
-        Type = type;
-        HasUpdated = false;
-        FallDelay = 0;
-        LastDirection = 0;
+        this.color = color;
+        this.type = type;
+        hasUpdated = false;
+        fallDelay = 0;
+        lastDirection = 0;
+        temp = 20;
         if (type == PixelType.Water || type == PixelType.Fire)
         {
-            Color = Variate(color);
+            color = Variate(color);
         }
     }
 
     public void ChangeType(PixelType newType, Pixel?[,] grid, int x, int y)
     {
-        Type = newType;
+        type = newType;
         switch (newType)
         {
             case PixelType.Sand:
-                Color = new Color(225, 191, 146, 200);
+                color = new Color(225, 191, 146, 200);
                 break;
             case PixelType.Water:
-                Color = new Color(100, 149, 237, 200);
+                color = new Color(100, 149, 237, 200);
                 break;
             case PixelType.WetSand:
                 // Remove the old pixel and create a new WetSand pixel
@@ -64,7 +67,7 @@ public class Pixel
 
     public PixelType GetType()
     {
-        return Type;
+        return type;
     }
 
     public Color Variate(Color color)
@@ -93,4 +96,16 @@ public class Pixel
         Random random,
         float deltaTime
     ) { }
+
+    public void Heat(int x)
+    {
+        temp += x;
+    }
+
+    public void Cool(int x)
+    {
+        int y = temp - x;
+        if (y >= 20)
+            temp = y;
+    }
 }

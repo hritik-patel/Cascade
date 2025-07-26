@@ -25,13 +25,13 @@ public class Fire : Pixel
         hsl.Luminosity -= 0.01f;
         if (hsl.Luminosity <= 0f)
         {
-            grid[(int)Position.X, (int)Position.Y] = null;
+            grid[(int)position.X, (int)position.Y] = null;
             return;
         }
-        Color = hsl.ToRGB();
+        color = hsl.ToRGB();
 
-        this.FallDelay -= deltaTime;
-        if (this.FallDelay > 0f)
+        this.fallDelay -= deltaTime;
+        if (this.fallDelay > 0f)
         {
             return;
         }
@@ -58,7 +58,7 @@ public class Fire : Pixel
             if (GridMethods.IsInBounds(tx, ty, gridWidth, gridHeight) && (grid[tx, ty] == null))
             {
                 GridMethods.MovePixel(x, y, tx, ty, grid);
-                this.FallDelay += 0.125f;
+                this.fallDelay += 0.125f;
                 break;
             }
         }
@@ -77,16 +77,15 @@ public class Fire : Pixel
                     continue;
 
                 var neighbor = grid[nx, ny];
-                if (neighbor is Water water)
-                {
-                    double distance = Math.Sqrt(dx * dx + dy * dy);
-                    // Ignore itself
-                    if (distance == 0)
-                        continue;
-                    // Heat up the water pixel based on the distance from the fire pixel
-                    int heat = (int)(5 / distance);
-                    water.heat(heat);
-                }
+                if (neighbor == null)
+                    continue;
+                double distance = Math.Sqrt(dx * dx + dy * dy);
+                // Ignore itself
+                if (distance == 0)
+                    continue;
+                // Heat up the water pixel based on the distance from the fire pixel
+                int heat = (int)(5 / distance);
+                neighbor.Heat(heat);
             }
         }
     }

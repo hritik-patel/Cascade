@@ -31,8 +31,8 @@ public static class GridMethods
 
         grid[toX, toY] = pixel;
         grid[fromX, fromY] = null;
-        pixel.Position = new Vector2(toX, toY);
-        pixel.HasUpdated = true;
+        pixel.position = new Vector2(toX, toY);
+        pixel.hasUpdated = true;
     }
 
     // Check if the cell at (x, y) is water
@@ -49,7 +49,7 @@ public static class GridMethods
         {
             return false;
         }
-        return grid[x, y]?.Type == type;
+        return grid[x, y]?.type == type;
     }
 
     public static bool IsCellWaterLocked(
@@ -101,7 +101,7 @@ public static class GridMethods
         grid[toX, toY] = fromPixel;
 
         // Update their positions
-        fromPixel.Position = new Vector2(toX, toY);
-        toPixel.Position = new Vector2(fromX, fromY);
+        fromPixel.position = new Vector2(toX, toY);
+        toPixel.position = new Vector2(fromX, fromY);
     }
 }

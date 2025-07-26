@@ -17,12 +17,12 @@ public class WetSand : Sand
         float deltaTime
     )
     {
-        this.FallDelay -= deltaTime;
-        if (this.FallDelay > 0f)
+        this.fallDelay -= deltaTime;
+        if (this.fallDelay > 0f)
         {
             if (!soaked)
             {
-                this.FallDelay = 0;
+                this.fallDelay = 0;
             }
             // Skip this pixel if it hasn't reached its fall delay
             return;
@@ -37,11 +37,11 @@ public class WetSand : Sand
         // Since wet sand is heavier, add a slight fall delay in water
         if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
-            this.FallDelay = 0.125f;
+            this.fallDelay = 0.125f;
         }
         else
         {
-            this.FallDelay = 0;
+            this.fallDelay = 0;
         }
 
         // Checks if the cells are empty to allow movement
@@ -59,7 +59,7 @@ public class WetSand : Sand
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
             // Set new fall delay after falling through water
-            this.FallDelay = 0.0625f;
+            this.fallDelay = 0.0625f;
         }
         else if (leftBelowEmpty && !rightBelowEmpty && leftEmpty)
         {

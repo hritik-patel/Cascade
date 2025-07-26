@@ -268,7 +268,7 @@ public class Main : Game
                     _spriteBatch.Draw(
                         pixelTexture,
                         new Rectangle(x * cellSize, y * cellSize, cellSize, cellSize),
-                        pixel.Color
+                        pixel.color
                     );
                 }
             }
@@ -294,7 +294,7 @@ public class Main : Game
                 if (grid[x, y] != null)
                 {
                     cells++;
-                    grid[x, y]!.HasUpdated = false;
+                    grid[x, y]!.hasUpdated = false;
                     switch (grid[x, y]!.GetType())
                     {
                         case PixelType.Sand:

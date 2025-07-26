@@ -5,7 +5,6 @@ public class Water : Pixel
 {
     private int maxMovement = 100;
     private int movementCounter = 0;
-    private int temp = 20;
     private bool waterLocked = false;
     private float lastAnimated;
 
@@ -26,20 +25,20 @@ public class Water : Pixel
     )
     {
         // If the pixel has already been updated, skip it
-        if (this.HasUpdated)
+        if (this.hasUpdated)
         {
             return;
         }
 
-        this.FallDelay -= deltaTime;
-        if (this.FallDelay > 0f)
+        this.fallDelay -= deltaTime;
+        if (this.fallDelay > 0f)
         {
             // Skip this pixel if it hasn't reached its fall delay
             return;
         }
 
         // Add a slight fall delay based on the movement counter, to simulate the water slowing down as it moves right/left
-        this.FallDelay = movementCounter * 0.004f;
+        this.fallDelay = movementCounter * 0.004f;
 
         // Check below and diagonals
         int belowX = x;
@@ -74,13 +73,13 @@ public class Water : Pixel
         // If both diagonal cells below are empty, move based on the last direction it moved
         else if (rightBelowEmpty && leftBelowEmpty && leftEmpty && rightEmpty)
         {
-            if (this.LastDirection == 1)
+            if (this.lastDirection == 1)
             {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
                 GridMethods.MovePixel(rightX, y, rightX, belowY, grid);
                 movementCounter = 0;
             }
-            else if (this.LastDirection == -1)
+            else if (this.lastDirection == -1)
             {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
                 GridMethods.MovePixel(leftX, y, leftX, belowY, grid);
@@ -88,20 +87,20 @@ public class Water : Pixel
             }
             else
             {
-                // No direction set yet, choose randomly, and set LastDirection
+                // No direction set yet, choose randomly, and set lastDirection
                 if (random.Next(2) == 0)
                 {
                     GridMethods.MovePixel(x, y, rightX, y, grid);
                     GridMethods.MovePixel(rightX, y, rightX, belowY, grid);
                     movementCounter = 0;
-                    this.LastDirection = 1;
+                    this.lastDirection = 1;
                 }
                 else
                 {
                     GridMethods.MovePixel(x, y, leftX, y, grid);
                     GridMethods.MovePixel(leftX, y, leftX, belowY, grid);
                     movementCounter = 0;
-                    this.LastDirection = -1;
+                    this.lastDirection = -1;
                 }
             }
         }
@@ -132,31 +131,31 @@ public class Water : Pixel
             && GridMethods.IsInBounds(rightX, y, gridWidth, gridHeight)
         )
         {
-            if (this.LastDirection == 1)
+            if (this.lastDirection == 1)
             {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
                 // Count the movement as it didn't go downwards
                 movementCounter++;
             }
-            else if (this.LastDirection == -1)
+            else if (this.lastDirection == -1)
             {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
                 movementCounter++;
             }
             else
             {
-                // No direction set yet, choose randomly, and set LastDirection
+                // No direction set yet, choose randomly, and set lastDirection
                 if (random.Next(2) == 0)
                 {
                     GridMethods.MovePixel(x, y, rightX, y, grid);
                     movementCounter++;
-                    this.LastDirection = 1;
+                    this.lastDirection = 1;
                 }
                 else
                 {
                     GridMethods.MovePixel(x, y, leftX, y, grid);
                     movementCounter++;
-                    this.LastDirection = -1;
+                    this.lastDirection = -1;
                 }
             }
         }
@@ -171,13 +170,13 @@ public class Water : Pixel
             {
                 GridMethods.MovePixel(x, y, leftX, y, grid);
                 movementCounter++;
-                this.LastDirection = -1;
+                this.lastDirection = -1;
             }
             else
             {
                 GridMethods.MovePixel(x, y, x, y, grid);
                 movementCounter++;
-                this.LastDirection = 0;
+                this.lastDirection = 0;
             }
         }
         else if (
@@ -190,11 +189,11 @@ public class Water : Pixel
             {
                 GridMethods.MovePixel(x, y, rightX, y, grid);
                 movementCounter++;
-                this.LastDirection = 1;
+                this.lastDirection = 1;
             }
             else
             {
-                this.LastDirection = 0;
+                this.lastDirection = 0;
             }
         }
         // If it is 'waterLocked' (surrouned by water), 'animate' it.
@@ -207,7 +206,7 @@ public class Water : Pixel
             else
             {
                 var pixel = grid[x, y];
-                pixel.Color = Variate(new Color(100, 149, 237, 200));
+                pixel.color = Variate(new Color(100, 149, 237, 200));
                 double nextVariation = 0.1 + random.NextDouble() * (0.5 - 0.1);
                 lastAnimated += (float)nextVariation;
             }
@@ -216,24 +215,7 @@ public class Water : Pixel
         {
             // No move possible, do nothing
             // Reset last direction if no move is made
-            this.LastDirection = 0;
+            this.lastDirection = 0;
         }
-    }
-
-    public void heat(int x)
-    {
-        temp += x;
-    }
-
-    public void cool(int x)
-    {
-        int y = temp - x;
-        if (y > 20)
-            temp = y;
-    }
-
-    public int getTemp()
-    {
-        return temp;
     }
 }
