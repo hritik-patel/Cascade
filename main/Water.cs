@@ -6,7 +6,9 @@ public class Water : Pixel
     private int maxMovement = 100;
     private int movementCounter = 0;
     private bool waterLocked = false;
+    private bool moving = true;
     private float lastAnimated;
+    private Vector2 lastPos = new Vector2(0, 0);
 
     public Water()
         : base(PixelType.Water, new Color(100, 149, 237, 200)) { }
@@ -216,6 +218,37 @@ public class Water : Pixel
             // No move possible, do nothing
             // Reset last direction if no move is made
             this.lastDirection = 0;
+        }
+
+        // If the pixel hasnt moved set 'moving' to false
+        if (lastPos == new Vector2(x, y))
+        {
+            moving = false;
+        }
+        else
+        {
+            moving = true;
+        }
+
+        Console.WriteLine(moving);
+
+        // Update the last position for the next loop
+        lastPos = new Vector2(x, y);
+
+        if ((movementCounter == maxMovement || !moving))
+        {
+            if (
+                GridMethods.IsCellX(x, y + 1, gridWidth, gridHeight, grid, PixelType.WetSand)
+                && GridMethods.IsCellX(x, y + 2, gridWidth, gridHeight, grid, PixelType.Sand)
+            )
+            {
+                if (random.Next(1000) > 990)
+                {
+                    grid[x, y] = null;
+                    grid[x, y + 2] = null;
+                    grid[x, y + 2] = new WetSand();
+                }
+            }
         }
     }
 }
