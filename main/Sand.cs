@@ -44,7 +44,7 @@ public class Sand : Pixel
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
         }
-        else if (temp > 100)
+        else if (temp > 180)
         {
             this.ChangeType(PixelType.Glass, grid, x, y);
         }

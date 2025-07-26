@@ -62,6 +62,10 @@ public class Pixel
                 grid[x, y - 1] = null;
                 grid[x, y] = new Steam();
                 break;
+            case PixelType.Glass:
+                grid[x, y] = null;
+                grid[x, y] = new Glass();
+                break;
         }
     }
 

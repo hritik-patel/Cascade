@@ -28,6 +28,8 @@ public class Main : Game
     private int waterCount = 0;
     private int wetSandCount = 0;
     private int fireCount = 0;
+    private int steamCount = 0;
+    private int glassCount = 0;
     private Graph debugGraph;
     private Texture2D circleTexture;
     private Texture2D sliceTexture;
@@ -35,6 +37,8 @@ public class Main : Game
     private Button waterButton;
     private Button wetSandButton;
     private Button fireButton;
+    private Button steamButton;
+    private Button glassButton;
     private Texture2D buttonTexture;
     private List<Button> buttons = new List<Button>();
     private Pixel pixel;
@@ -117,11 +121,29 @@ public class Main : Game
             selectedButtonTexture,
             new Color(255, 100, 0, 200)
         );
+        steamButton = new Button(
+            new Rectangle(1160, 65, 100, 40),
+            "Steam",
+            _debugFont,
+            buttonTexture,
+            selectedButtonTexture,
+            new Color(255, 255, 255, 200)
+        );
+        glassButton = new Button(
+            new Rectangle(1290, 65, 100, 40),
+            "Glass",
+            _debugFont,
+            buttonTexture,
+            selectedButtonTexture,
+            new Color(195, 225, 235, 200)
+        );
         // Add buttons to the list for easy management
         buttons.Add(sandButton);
         buttons.Add(waterButton);
         buttons.Add(wetSandButton);
         buttons.Add(fireButton);
+        buttons.Add(steamButton);
+        buttons.Add(glassButton);
     }
 
     protected override void Update(GameTime gameTime)
@@ -173,6 +195,12 @@ public class Main : Game
                 case "Fire":
                     pixel = new Fire(PixelType.Fire, new Color(255, 100, 0, 200));
                     break;
+                case "Steam":
+                    pixel = new Steam();
+                    break;
+                case "Glass":
+                    pixel = new Glass();
+                    break;
                 default:
                     pixel = null;
                     break;
@@ -202,6 +230,8 @@ public class Main : Game
         waterButton.IsClicked();
         wetSandButton.IsClicked();
         fireButton.IsClicked();
+        steamButton.IsClicked();
+        glassButton.IsClicked();
         // Update the grid for specific pixel types
         UpdateGrid(deltaTime);
         base.Update(gameTime);
@@ -248,8 +278,30 @@ public class Main : Game
             new Vector2(1030, 570),
             Color.White
         );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Steam: " + steamCount,
+            new Vector2(1030, 610),
+            Color.White
+        );
+        _spriteBatch.DrawString(
+            _debugFont,
+            "Glass: " + glassCount,
+            new Vector2(1030, 650),
+            Color.White
+        );
+
         Vector2 center = new Vector2(debugPanel.X + 325, debugPanel.Y + 75);
-        debugGraph.DrawGraph(center, cells, sandCount, waterCount, wetSandCount, fireCount);
+        debugGraph.DrawGraph(
+            center,
+            cells,
+            sandCount,
+            waterCount,
+            wetSandCount,
+            fireCount,
+            steamCount,
+            glassCount
+        );
 
         // Draw the buttons in the selection panel
         // Starting at the top left corner of the selection panel, place buttons in a 2x2 grid
@@ -257,6 +309,8 @@ public class Main : Game
         waterButton.Draw(_spriteBatch);
         wetSandButton.Draw(_spriteBatch);
         fireButton.Draw(_spriteBatch);
+        steamButton.Draw(_spriteBatch);
+        glassButton.Draw(_spriteBatch);
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -286,6 +340,8 @@ public class Main : Game
         waterCount = 0;
         wetSandCount = 0;
         fireCount = 0;
+        steamCount = 0;
+        glassCount = 0;
         // Reset all HasUpdated flags + count cell types for the graph
         for (int y = 0; y < gridHeight; y++)
         {
@@ -308,6 +364,12 @@ public class Main : Game
                             break;
                         case PixelType.Fire:
                             fireCount++;
+                            break;
+                        case PixelType.Steam:
+                            steamCount++;
+                            break;
+                        case PixelType.Glass:
+                            glassCount++;
                             break;
                     }
                 }
