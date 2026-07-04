@@ -31,15 +31,12 @@ public class Main : Game
     private int steamCount = 0;
     private int glassCount = 0;
     private Graph debugGraph;
-    private Texture2D circleTexture;
-    private Texture2D sliceTexture;
     private Button sandButton;
     private Button waterButton;
     private Button wetSandButton;
     private Button fireButton;
     private Button steamButton;
     private Button glassButton;
-    private Texture2D buttonTexture;
     private List<Button> buttons = new List<Button>();
     private Pixel pixel;
 
@@ -226,12 +223,6 @@ public class Main : Game
         }
 
         deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        sandButton.IsClicked();
-        waterButton.IsClicked();
-        wetSandButton.IsClicked();
-        fireButton.IsClicked();
-        steamButton.IsClicked();
-        glassButton.IsClicked();
         // Update the grid for specific pixel types
         UpdateGrid(deltaTime);
         base.Update(gameTime);
@@ -351,7 +342,7 @@ public class Main : Game
                 {
                     cells++;
                     grid[x, y]!.hasUpdated = false;
-                    switch (grid[x, y]!.GetType())
+                    switch (grid[x, y]!.GetPixelType())
                     {
                         case PixelType.Sand:
                             sandCount++;

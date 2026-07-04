@@ -3,10 +3,11 @@ using Microsoft.Xna.Framework;
 
 public class Steam : Fire
 {
-    public HSLColour hsl = new HSLColour(0.5f, 0.0f, 1.0f);
-
     public Steam()
-        : base(PixelType.Steam, new Color(255, 255, 255, 200)) { }
+        : base(PixelType.Steam, new Color(255, 255, 255, 200))
+    {
+        hsl = new HSLColour(0.5f, 0.0f, 1.0f);
+    }
 
     public override void PixelUpdate(
         Pixel?[,] grid,

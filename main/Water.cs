@@ -5,7 +5,6 @@ public class Water : Pixel
 {
     private int maxMovement = 100;
     private int movementCounter = 0;
-    private bool waterLocked = false;
     private float lastAnimated;
 
     public Water()

@@ -70,7 +70,7 @@ public class Pixel
         }
     }
 
-    public PixelType GetType()
+    public PixelType GetPixelType()
     {
         return type;
     }
