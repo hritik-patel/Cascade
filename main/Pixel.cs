@@ -46,7 +46,8 @@ public class Pixel
         switch (newType)
         {
             case PixelType.Sand:
-                color = new Color(225, 191, 146, 200);
+                grid[x, y] = null;
+                grid[x, y] = new Sand(PixelType.Sand, new Color(225, 191, 146, 200));
                 break;
             case PixelType.Water:
                 color = new Color(100, 149, 237, 200);

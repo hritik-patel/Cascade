@@ -55,6 +55,11 @@ public class WetSand : Sand
         {
             GridMethods.MovePixel(x, y, belowX, belowY, grid);
         }
+        // Dry out back into regular sand after heated enough
+        else if (temp > 60)
+        {
+            this.ChangeType(PixelType.Sand, grid, x, y);
+        }
         else if (GridMethods.IsCellX(belowX, belowY, gridWidth, gridHeight, grid, PixelType.Water))
         {
             GridMethods.SwapPixel(x, y, belowX, belowY, grid);
